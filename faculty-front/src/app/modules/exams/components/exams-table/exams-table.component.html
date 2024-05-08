@@ -1,0 +1,30 @@
+<table>
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Scheduled For</th>
+        <th>Status</th>
+        <th *ngIf="role == 'Student'">Teacher Name</th>
+        <th *ngIf="role == 'Teacher'"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exam of examinations">
+        <td>{{ exam.courseName }}</td>
+        <td>{{ exam.scheduledFor | date:'dd/MMM/yyy hh:mm' }}</td>    
+        <td Status [examDate]="exam.scheduledFor" [status]="exam.status"></td>
+        <!--
+        <td [ngStyle]="{'color': exam.status==0? '#2A525F' : 'red'}">
+          {{ exam.status==0? 'scheduled' : 'cancelled' }}
+        </td>
+        -->
+        <td *ngIf="role == 'Student'">{{ exam.teacherName }}</td>
+        <td *ngIf="role == 'Teacher'">
+          <button CheckCancellability [scheduledFor]="exam.scheduledFor" [status]="exam.status" class="btn-cancel" (click)="cancel(exam.id)">Cancel</button>
+          <!--
+            <button *ngIf="exam.status==0" class="btn-cancel" (click)="cancel(exam.id)">Cancel</button>
+          -->
+        </td>
+      </tr>
+    </tbody>
+</table>

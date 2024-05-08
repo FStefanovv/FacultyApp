@@ -1,0 +1,9 @@
+
+<label class="label-regular" for="email">Email:</label> <br>
+<input class="input-regular"  id="email" type="text" [(ngModel)]="loginDto.email"/> <br>
+<label class="label-regular" for="password">Password:</label> <br>
+<input class="input-regular" id="password" type="password" [(ngModel)]="loginDto.password" /> <br>
+
+<p style="color: red;">{{this.loginError}}</p>
+
+<button (click)="login()" class="btn-regular">Log In</button>

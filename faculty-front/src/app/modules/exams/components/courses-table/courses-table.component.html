@@ -1,0 +1,24 @@
+<table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Year</th>
+        <th>Department</th>
+        <th>ESPB Points</th>
+        <th *ngIf="role === 'Student'">Teacher</th>
+        <th *ngIf="role === 'Teacher'"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let course of courses">
+        <td>{{ course.name }}</td>
+        <td>{{ course.year }}</td>
+        <td>{{ course.department }}</td>
+        <td>{{ course.espbPoints }}</td>
+        <td *ngIf="role === 'Student'">{{ course.teacher }}</td>
+        <td *ngIf="role === 'Teacher'"><button (click)="createExam(course.id)" class="btn-regular">Create Exam</button></td>
+        
+      </tr>
+    </tbody>
+  </table>
+  

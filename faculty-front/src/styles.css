@@ -1,0 +1,92 @@
+* {
+    font-size: 16px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+.input-regular {
+    border: 1px solid #C1BFBF;
+    border-radius: 3px;
+ 
+    padding: 3px 8px;
+}
+
+.input-regular:focus {
+    outline-color: #389AB9;
+}
+
+
+.btn-regular {
+    color: white;
+    background-color: #2A525F ;
+    transition: 0.4s ease;
+    border-radius: 3px;
+    border: 2px solid #2A525F;
+    padding: 4px 6px;
+ 
+}
+
+.btn-regular:hover {
+    cursor: pointer;
+    background-color: white;
+    color: #2A525F;
+}
+
+.btn-cancel {
+    color: white;
+    background-color: red ;
+    transition: 0.4s ease;
+    border-radius: 3px;
+    border: 2px solid red;
+    padding: 4px 6px;
+}
+
+.btn-cancel:hover {
+    cursor: pointer;
+    background-color: white;
+    color: red;
+}
+
+.exam-created {
+    background-color: #BFCDED;
+    color: #0740C3;
+    border: 1px solid #0740C3;
+    border-radius: 2px;
+    width: 40%;
+}
+
+.exam-cancelled{
+    color: red;
+    background-color: #E9A7A7;
+    border: 1px solid red;
+    border-radius: 2px;
+    width: 40%;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #2A525F;
+    color: white;
+    font-weight: 600; 
+    padding: 8px 16px;
+}
+  
+td {
+    text-align: center;
+    padding: 8px 16px;
+}
+
+tbody > tr {
+    transition: 0.2s ease;
+}
+
+tbody > tr:hover {
+    background-color: #D4DEEC;
+    cursor: pointer;
+}
+
+  
+ 
+  
