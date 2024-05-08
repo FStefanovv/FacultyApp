@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http'
 import { LoginDto } from '../dtos/login-dto';
 import { Observable } from 'rxjs';
-import { Jwt } from '../../../responses/jwt';
+import { Jwt } from '../../../jwt-response/jwt';
 import { tokenGetter } from '../../../services/auth.service';
 import { UserData } from '../dtos/user-data-dto';
 

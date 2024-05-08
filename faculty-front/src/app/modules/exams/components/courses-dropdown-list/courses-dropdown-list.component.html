@@ -1,4 +1,0 @@
-<select [(ngModel)]="selectedCourseId" (change)="onChange($event)" class="input-regular">
-    <option value="">Select a course</option>
-    <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
-  </select>

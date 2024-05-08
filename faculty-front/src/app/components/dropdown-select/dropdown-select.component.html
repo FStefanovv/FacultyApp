@@ -1,0 +1,4 @@
+<select [(ngModel)]="selectedItem" (change)="onChange()" class="input-regular">
+    <option *ngIf="itemType">Select a {{itemType}}</option>
+    <option *ngFor="let item of items" [value]="item.id">{{item.name}}</option>
+</select>

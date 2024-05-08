@@ -14,12 +14,12 @@ import { tokenGetter } from './services/auth.service';
 import { AuthGuard } from './auth.guard';
 import { CreateExamComponent } from './modules/exams/components/create-exam/create-exam.component';
 import { MyCoursesComponent } from './modules/exams/components/my-courses/my-courses.component';
-import { CoursesDropdownListComponent } from './modules/exams/components/courses-dropdown-list/courses-dropdown-list.component';
 import { CoursesTableComponent } from './modules/exams/components/courses-table/courses-table.component';
 import { ExamsTableComponent } from './modules/exams/components/exams-table/exams-table.component';
 import { ExamsComponent } from './modules/exams/components/exams/exams.component';
 import { CheckCancellabilityDirective } from './directives/check-cancellability.directive';
 import { GetStatusStringDirective } from './directives/get-status-string.directive';
+import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 
 
 
@@ -29,12 +29,12 @@ import { GetStatusStringDirective } from './directives/get-status-string.directi
     LoginComponent,
     CreateExamComponent,
     MyCoursesComponent,
-    CoursesDropdownListComponent,
     CoursesTableComponent,
     ExamsTableComponent,
     ExamsComponent,
     CheckCancellabilityDirective,
-    GetStatusStringDirective
+    GetStatusStringDirective,
+    DropdownSelectComponent
   ],
   imports: [
     BrowserModule,
