@@ -4,6 +4,7 @@
         <th>Course Name</th>
         <th>Scheduled For</th>
         <th>Status</th>
+        <th>Available Places</th>
         <th *ngIf="role == 'Student'">Teacher Name</th>
         <th *ngIf="role == 'Teacher'"></th>
       </tr>
@@ -13,6 +14,7 @@
         <td>{{ exam.courseName }}</td>
         <td>{{ exam.scheduledFor | date:'dd/MMM/yyy hh:mm' }}</td>    
         <td Status [examDate]="exam.scheduledFor" [status]="exam.status"></td>
+        <td>{{exam.availablePlaces}}</td>
         <!--
         <td [ngStyle]="{'color': exam.status==0? '#2A525F' : 'red'}">
           {{ exam.status==0? 'scheduled' : 'cancelled' }}

@@ -4,4 +4,5 @@ export class Examination {
     public scheduledFor!: Date;
     public status!: number;
     public teacherName!: string;
+    public availablePlaces!: number;
 }

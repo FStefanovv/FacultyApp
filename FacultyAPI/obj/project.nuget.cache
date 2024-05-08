@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DOQebou3PMWVBCZbHzEyMekEuuaWDh32MN1NYQOd9XTO+jHHCPs6FcVeWVt8Ux7pJABgZ92fTfC7XZs0QZrOQw==",
+  "dgSpecHash": "oWFHTvtNYFFYHGUUkO7/xjIxOy4GuDQYM0Vjgs9LpEeTqR/BUl0ZQk5jEIc8D28ZYOkoTbqnAQBVAibiFSbrEA==",
   "success": true,
-  "projectFilePath": "/home/filip/Desktop/CS .NET /FacultyApp/FacultyApp.csproj",
+  "projectFilePath": "/home/filip/Desktop/CS .NET /faculty/FacultyAPI/FacultyApp.csproj",
   "expectedPackageFiles": [
     "/home/filip/.nuget/packages/automapper/10.1.1/automapper.10.1.1.nupkg.sha512",
     "/home/filip/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/8.1.1/automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",

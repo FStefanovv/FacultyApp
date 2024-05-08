@@ -6961,11 +6961,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/filip/Desktop/CS .NET /FacultyApp/FacultyApp.csproj",
+      "projectUniqueName": "/home/filip/Desktop/CS .NET /faculty/FacultyAPI/FacultyApp.csproj",
       "projectName": "FacultyApp",
-      "projectPath": "/home/filip/Desktop/CS .NET /FacultyApp/FacultyApp.csproj",
+      "projectPath": "/home/filip/Desktop/CS .NET /faculty/FacultyAPI/FacultyApp.csproj",
       "packagesPath": "/home/filip/.nuget/packages/",
-      "outputPath": "/home/filip/Desktop/CS .NET /FacultyApp/obj/",
+      "outputPath": "/home/filip/Desktop/CS .NET /faculty/FacultyAPI/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/filip/.nuget/NuGet/NuGet.Config"

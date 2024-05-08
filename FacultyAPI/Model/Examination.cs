@@ -15,6 +15,9 @@ public class Examination {
 
     [Required]
     public ExaminationStatus Status {get; set;}
+    
+    [Required]
+    public int AvailablePlaces {get; set;}
 
     [Required]
     public string CourseId {get; set;}

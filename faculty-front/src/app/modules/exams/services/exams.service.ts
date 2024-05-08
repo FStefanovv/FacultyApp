@@ -30,9 +30,9 @@ export class ExamsService {
     return this.http.get<Course[]>(teacherCoursesUrl, { headers } );
   }
 
-  create(courseId: string, examDate: Date) : any {
+  create(courseId: string, examDate: Date, numOfPlaces: number) : any {
     const createExamUrl = 'https://localhost:5001/exams/'+courseId;
-    const newExaminationDto = { scheduledFor: examDate };
+    const newExaminationDto = { scheduledFor: examDate, availablePlaces: numOfPlaces };
 
     let headers = this.getBearerTokenHeader();
     

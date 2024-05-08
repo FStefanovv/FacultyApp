@@ -12,9 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CreateExamComponent implements OnInit {
   
   teacherCourses: Course[] = [];
+
   examDate!: Date;
   courseId!: string;
-
+  numOfPlaces!: number;
 
   constructor(private examsService: ExamsService, private route: ActivatedRoute){}
 
@@ -40,7 +41,11 @@ export class CreateExamComponent implements OnInit {
       return;
     }
 
-    this.examsService.create(this.courseId, this.examDate).subscribe({
+    if(!this.numOfPlaces || this.numOfPlaces <= 0){
+      return;
+    }
+
+    this.examsService.create(this.courseId, this.examDate, this.numOfPlaces).subscribe({
       next: (response: any) => {
         console.log('Exam created successfully:', response);
       },

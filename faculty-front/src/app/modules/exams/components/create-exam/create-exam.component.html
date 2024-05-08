@@ -1,4 +1,7 @@
 <h2>Create an exam</h2>
-<courses-dropdown-list [selectedCourseId]="courseId" (selectedCourseEvent)="changedCourseSelection($event)" [courses]="teacherCourses"></courses-dropdown-list><br>
-<input class="input-regular" type="date" [(ngModel)]="examDate" ><br>
+<courses-dropdown-list [selectedCourseId]="courseId" (selectedCourseEvent)="changedCourseSelection($event)" [courses]="teacherCourses"></courses-dropdown-list><br><br>
+<label>Date and Time:</label><br>
+<input class="input-regular" type="date" [(ngModel)]="examDate" ><br><br>
+<label>Number of available places:</label><br>
+<input class="input-regular" type="number" [(ngModel)]="numOfPlaces"><br><br>
 <button (click)="createExam()" class="btn-regular">Schedule Exam</button>

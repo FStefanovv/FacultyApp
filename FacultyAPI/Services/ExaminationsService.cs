@@ -17,15 +17,16 @@ public class ExaminationsService : IExaminationsService
         _notificationHandler = notificationHandler;
     }
     
-    public async Task<Examination> CreateExamination(string teacherId, string courseId, DateTime scheduledFor){
+    public async Task<Examination> CreateExamination(NewExaminationDto dto){
         Examination examination = new Examination { 
-                                    TeacherId = teacherId, ScheduledFor = scheduledFor.ToUniversalTime(), 
-                                    Status = ExaminationStatus.SCHEDULED, CourseId = courseId
+                                    TeacherId = dto.TeacherId, ScheduledFor = dto.ScheduledFor.ToUniversalTime(), 
+                                    Status = ExaminationStatus.SCHEDULED, CourseId = dto.CourseId,
+                                    AvailablePlaces = dto.AvailablePlaces
                                 };
         
         await _repository.Create(examination);
 
-        _notificationHandler.CreatedExamination(examination.Id);
+        _notificationHandler.NotifyStudentsAboutExamination(examination.Id, NotificationType.EXAMINATION_CREATED);
 
         return examination;
     }
@@ -40,7 +41,7 @@ public class ExaminationsService : IExaminationsService
             throw new Exception("Examinaton has to be cancelled at least 2 days in advance");
         
         examination.Status = ExaminationStatus.CANCELLED;
-        _notificationHandler.CancelledExamination(examination.Id);
+        _notificationHandler.NotifyStudentsAboutExamination(examination.Id, NotificationType.EXAMINATION_CANCELLED);
         await _repository.SaveChangesAsync();
     }
 
@@ -78,7 +79,8 @@ public class ExaminationsService : IExaminationsService
                 CourseName = exam.Course.Name,
                 ScheduledFor = exam.ScheduledFor,
                 Status = exam.Status,
-                TeacherName = exam.Teacher.FirstName + " " + exam.Teacher.LastName
+                TeacherName = exam.Teacher.FirstName + " " + exam.Teacher.LastName,
+                AvailablePlaces = exam.AvailablePlaces
             };
             examDtos.Add(currentDto);
         }

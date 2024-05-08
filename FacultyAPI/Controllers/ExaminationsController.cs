@@ -28,9 +28,12 @@ public class ExaminationsController : ControllerBase {
     [Authorize(Roles = "Teacher")]
     [RequireCourseOwnership]
     public async Task<ActionResult> AddExamination([FromRoute] string courseId, [FromBody] NewExaminationDto newExaminationDto) {
-        var userId =  User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var teacherId =  User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         try {
-            Examination newExamination = await _service.CreateExamination(userId, courseId, newExaminationDto.ScheduledFor);
+            newExaminationDto.CourseId = courseId;
+            newExaminationDto.TeacherId = teacherId;
+
+            Examination newExamination = await _service.CreateExamination(newExaminationDto);
             return CreatedAtAction(nameof(GetById), new {id = newExamination.Id}, newExamination);
         } catch (Exception ex) {
             return BadRequest(ex.Message);

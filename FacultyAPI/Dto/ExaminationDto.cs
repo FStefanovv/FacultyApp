@@ -11,5 +11,6 @@ public class ExaminationDto {
     public DateTime ScheduledFor {get; set;}
     public ExaminationStatus Status {get; set;}
     public string TeacherName {get; set;}
+    public int AvailablePlaces {get; set;}
 
 }

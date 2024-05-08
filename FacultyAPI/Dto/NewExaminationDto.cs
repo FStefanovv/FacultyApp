@@ -7,4 +7,8 @@ public class NewExaminationDto {
 
     [Required]
     public DateTime ScheduledFor {get; set;}
+    [Required]
+    public int AvailablePlaces {get; set;}
+    public string TeacherId {get; set;}
+    public string CourseId {get; set;}
 }

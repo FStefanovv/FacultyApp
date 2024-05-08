@@ -1,4 +1,5 @@
 using FacultyApp.Enums;
+using FacultyApp.Model;
 using FacultyApp.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -18,56 +19,47 @@ public class NotificationFireForgetHandler {
         _examinationNotifications = examinationNotifications;
     }
 
-    public void CreatedExamination(string examinationId){
-        Task.Run( async () => {
+    public void NotifyStudentsAboutExamination(string examinationId, NotificationType notificationType){
+         Task.Run( async () => {
             try {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<StudentsDbContext>();
+                
                 var examination = await context.Examinations
                                     .Include(e => e.Teacher)
                                     .Include(e => e.Course)
                                     .FirstOrDefaultAsync(e => e.Id == examinationId);
 
-                await _examinationNotifications.Clients.Group(examination.Course.Year.ToString()).SendMessage(
-                    new Notification {
-                        Type = NotificationType.EXAMINATION_CREATED,
-                        Message = $"{examination.Teacher.Email} has scheduled an examination " +
-                                $"for subject {examination.Course.Name} " +
-                                $"on {examination.ScheduledFor}"
-                    }
-                );
-               
+                Notification notification = GenerateExaminationNotificationForStudents(examination, notificationType);
+
+                await _examinationNotifications.Clients.Group(examination.Course.Year.ToString()).SendMessage(notification);
             } catch(Exception ex) {
                 _logger.LogError(ex.Message);
             }
         }
         );
     }
-
-    public void CancelledExamination(string id)
-    {
-        Task.Run( async () => {
-            try {
-                using var scope = _serviceScopeFactory.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<StudentsDbContext>();
-                var examination = await context.Examinations
-                                    .Include(e => e.Teacher)
-                                    .Include(e => e.Course)
-                                    .FirstOrDefaultAsync(e => e.Id == id);
-
-                await _examinationNotifications.Clients.Group(examination.Course.Year.ToString()).SendMessage(
-                    new Notification {
+   
+    private Notification GenerateExaminationNotificationForStudents(Examination examination, NotificationType notificationType){
+        Notification notification;
+        if(notificationType == NotificationType.EXAMINATION_CREATED){
+            notification = new Notification {
+                        Type = NotificationType.EXAMINATION_CREATED,
+                        Message = $"{examination.Teacher.Email} has scheduled an examination " +
+                                $"for subject {examination.Course.Name} " +
+                                $"on {examination.ScheduledFor}"
+                    };
+        }  
+        else if(notificationType == NotificationType.EXAMINATION_CANCELLED) {
+            notification = new Notification {
                         Type = NotificationType.EXAMINATION_CANCELLED,
                         Message = $"{examination.Teacher.Email} has cancelled the examination " +
                                 $"for subject {examination.Course.Name} " +
                                 $"on {examination.ScheduledFor}"
-                    }
-                );
-               
-            } catch(Exception ex) {
-                _logger.LogError(ex.Message);
-            }
-        }
-        );
+                    };
+        }  
+        else throw new Exception("Invalid notification type.");
+
+        return notification;
     }
 }
