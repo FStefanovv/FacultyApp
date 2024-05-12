@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserData } from '../modules/accounts/dtos/user-data-dto';
+import { LoginDto } from '../modules/accounts/dtos/login-dto';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -11,46 +14,53 @@ export function tokenGetter() {
 })
 export class AuthService {
   
-  private helper: JwtHelperService = new JwtHelperService();
+  constructor(private http: HttpClient) {}
 
-  constructor( ) {}
-
-  private decode() : any {
-    let token = tokenGetter();
-    if(token != null) {
-      let decoded = this.helper.decodeToken(token);
-      return decoded;
-    }
+  public login(dto: LoginDto) : Observable<any> {
+    const loginUrl = 'https://localhost:5001/login';
+    return this.http.post(loginUrl, dto);
   }
 
-  public login(token: string) {
-    localStorage.setItem('jwt', token);
+  /*
+  public login(loginData: LoginData) {
+    localStorage.setItem('loggedIn', 'true');
+    localStorage.setItem('role', loginData.role);
+    localStorage.setItem('email', loginData.email);
+    localStorage.setItem('userId', loginData.userId);
   }
+  */
 
-  public logout() {
-    localStorage.removeItem('jwt');
+  public logout() : Observable<any> {
+    const logoutUrl = 'https://localhost:5001/logout';
+    return this.http.post(logoutUrl, {});
   }
 
   public isLoggedIn() : boolean {
-    let token = tokenGetter();
-    return token != null && !this.helper.isTokenExpired(token);
+    const loggedIn = localStorage.getItem('loggedIn');
+    if(loggedIn && loggedIn==='true')
+      return true;
+    else return false;
   }
 
   public getRole() : any {
-    let decoded = this.decode();
-    const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    return role;
+    const role = localStorage.getItem('role');
+    if(role)
+      return role;
+    else return undefined;
   }
 
   public getEmail() : any {
-    let decoded = this.decode();
-    let email = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
-    return email;
+    const email = localStorage.getItem('email');
+    if(email)
+      return email;
+    else return undefined;
   }
 
   public getUserId() : any {
-    let decoded = this.decode();
-    return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    const userId = localStorage.getItem('userId');
+    if(userId)
+      return userId;
+    else return undefined;
   }
 
   saveUserData(userData: UserData) {

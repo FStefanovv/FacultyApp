@@ -12,7 +12,7 @@ export class SessionService {
               private signalRService: SignalrService
   ) { }
 
-  public initiateStudentSession(token: string) {
+  public initiateStudentSession() {
     this.accountService.getUserData().subscribe({
         next: async response => {
             

@@ -20,14 +20,12 @@ export class LoginComponent {
 
 
   login(){
-      this.accountService.attemptLogin(this.loginDto).subscribe({
-        next: async response => {
-          this.authService.login(response.token);
+      this.authService.login(this.loginDto).subscribe({
+        next: async () => {
           if(this.authService.getRole() == 'Student') {
-            await this.sessionService.initiateStudentSession(response.token);
+            await this.sessionService.initiateStudentSession();
           }
-          else this.router.navigate(['/my-exams'])
-          
+          else this.router.navigate(['/my-exams']) 
         },
         error: error => {       
           if(error.status === 404)

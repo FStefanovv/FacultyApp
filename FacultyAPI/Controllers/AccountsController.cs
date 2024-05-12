@@ -8,7 +8,8 @@ using FacultyApp.Services;
 using FacultyApp.Model;
 using FacultyApp.ApiKey;
 using FacultyApp.Exceptions;
-using FacultyApp.Responses;
+using FacultyApp.Utils;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("accounts")]
@@ -29,13 +30,26 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(404)]
     public async Task<ActionResult> Login([FromBody] LoginDto loginDto) {
         try {
-            string token = await _service.Authenticate(loginDto);
-            return Ok(new JwtResponse {Token = token});
+            var (token, loginResponse) = await _service.Authenticate(loginDto);
+
+            Response.Cookies.Append("X-Access-Token", token, AuthCookieUtils.GetOptions());
+            
+            return Ok(loginResponse);
         } catch(NotFoundException) {
             return NotFound();
         } catch(WrongPasswordException){
             return Unauthorized();
         }
+    }
+
+    [HttpPost]
+    [Route("~/logout")]
+    [ProducesResponseType(200)]
+    [Authorize]
+    public ActionResult Logout(){
+
+        Response.Cookies.Append("X-Access-Token", "", AuthCookieUtils.GetInvalidationOptions());
+        return Ok();
     }
 
     [HttpPost]

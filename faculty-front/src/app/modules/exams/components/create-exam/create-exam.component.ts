@@ -19,6 +19,7 @@ export class CreateExamComponent implements OnInit {
   examDate!: Date;
   courseId!: string;
   numOfPlaces!: number;
+  errorMessage!: string;
 
   constructor(private examsService: ExamsService, private route: ActivatedRoute){}
 
@@ -45,14 +46,21 @@ export class CreateExamComponent implements OnInit {
   
   createExam() {
     if(!this.courseId || !this.teacherCourses.find(c => c.id === this.courseId)) {
+      this.errorMessage = "Please select a valid course";
       return;
     }
 
-    if (!this.examDate || this.examDate < new Date()) {
+    const examDateTime = new Date(this.examDate);
+    const currentDateTime = new Date();
+
+    if (!this.examDate || examDateTime < currentDateTime) {
+      console.log('ayy nigga');
+      this.errorMessage = "Date must be in the future";
       return;
     }
 
     if(!this.numOfPlaces || this.numOfPlaces <= 0){
+      this.errorMessage = "Entered application slots number must be greater than 0";
       return;
     }
 

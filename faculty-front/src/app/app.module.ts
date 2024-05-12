@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './modules/accounts/components/login/login.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenGetter } from './services/auth.service';
 import { AuthGuard } from './auth.guard';
 import { CreateExamComponent } from './modules/exams/components/create-exam/create-exam.component';
@@ -20,6 +20,8 @@ import { ExamsComponent } from './modules/exams/components/exams/exams.component
 import { CheckCancellabilityDirective } from './directives/check-cancellability.directive';
 import { GetStatusStringDirective } from './directives/get-status-string.directive';
 import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
+import { AddAccessTokenInterceptor } from './interceptors/add-access-token.interceptor';
+import { LogoutComponent } from './modules/accounts/components/logout/logout.component';
 
 
 
@@ -34,19 +36,13 @@ import { DropdownSelectComponent } from './components/dropdown-select/dropdown-s
     ExamsComponent,
     CheckCancellabilityDirective,
     GetStatusStringDirective,
-    DropdownSelectComponent
+    DropdownSelectComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:5001"],
-        disallowedRoutes: []
-      }
-    }),
     BrowserAnimationsModule,
     AppRoutingModule,
     ToastrModule.forRoot({
@@ -55,7 +51,9 @@ import { DropdownSelectComponent } from './components/dropdown-select/dropdown-s
       toastClass: 'exam-created exam-cancelled' 
     })
     ],
-  providers: [AuthGuard],
+  providers: [
+    provideHttpClient(withInterceptors([AddAccessTokenInterceptor]))
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

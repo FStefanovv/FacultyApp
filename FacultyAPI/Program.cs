@@ -31,13 +31,18 @@ builder.Services.AddDbContext<StudentsDbContext>(options =>
         .UseNpgsql(pgConnectionString)
 );
 
+
+
+
 builder.Services.AddAuthentication(options =>
     {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
-{
+{   
+    o.RequireHttpsMetadata = false;
+    o.SaveToken = true;
     o.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = builder.Configuration["JwtAuth:Issuer"],
@@ -49,7 +54,16 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
+    o.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["X-Access-Token"];
+            return Task.CompletedTask;
+        }
+    };
 });
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -62,12 +76,14 @@ var allOrigins = "AllowAllOrigins";
 
 builder.Services.AddCors(options => {
     options.AddPolicy(
-        name: allOrigins,
-        policy => {
-            policy.AllowAnyHeader();
-            policy.AllowAnyOrigin();
-            policy.AllowAnyMethod();
-        });
+    name: allOrigins,
+    policy => {
+        policy.AllowAnyHeader();
+        policy.WithOrigins("http://localhost:4200"); 
+        policy.AllowCredentials();
+        policy.AllowAnyMethod();
+    });
+
 });
 
 builder.Services.AddScoped<IExaminationsRepository, ExaminationsRepository>();

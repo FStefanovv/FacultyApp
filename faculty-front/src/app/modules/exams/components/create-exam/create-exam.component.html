@@ -1,7 +1,13 @@
 <h2>Create an exam</h2>
-<dropdown-select [selectedItem]="courseId" (selectionChange)="changedCourseSelection($event)" [items]="coursesSelectionItems"></dropdown-select><br><br>
+
+<dropdown-select [selectedItem]="courseId" itemType="course" (selectionChange)="changedCourseSelection($event)" [items]="coursesSelectionItems"></dropdown-select><br><br>
+
 <label>Date and Time:</label><br>
-<input class="input-regular" type="date" [(ngModel)]="examDate" ><br><br>
+<input class="input-regular" type="datetime-local" [(ngModel)]="examDate" ><br><br>
+
 <label>Number of available places:</label><br>
-<input class="input-regular" type="number" [(ngModel)]="numOfPlaces"><br><br>
+<input class="input-regular" type="number" min="1" [(ngModel)]="numOfPlaces"><br><br>
+
+<p [ngStyle]="{'color':'red'}">{{errorMessage}}</p>
+
 <button (click)="createExam()" class="btn-regular">Schedule Exam</button>
