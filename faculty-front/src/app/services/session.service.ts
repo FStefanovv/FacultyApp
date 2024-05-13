@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { AccountService } from '../modules/accounts/services/account.service';
 import { SignalrService } from './signalr.service';
 
@@ -13,12 +12,10 @@ export class SessionService {
   ) { }
 
   public setUserSessionData(){
-    console.log('got here');
     this.accountService.getUserData().subscribe({ 
-      next: async response => {            
+      next: response => {            
         let userData = response;
         if(userData.currentYear){
-          console.log("it's a student");
           sessionStorage.setItem('role', 'Student'); 
           sessionStorage.setItem('currentYear', userData.currentYear.toString());
         }
@@ -35,7 +32,7 @@ export class SessionService {
 
   public async initiateStudentSession() {
     
-    await this.signalRService.startConnection('exams');
+    await this.signalRService.startConnection();
 
     const currentYear = sessionStorage.getItem("currentYear");
 

@@ -115,6 +115,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ExamsNotificationsHub>("/exams");
+app.MapHub<NotificationsHub>("/notifs");
 
 app.Run();

@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { FormsModule } from '@angular/forms';
 
-import { JwtModule } from "@auth0/angular-jwt";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,9 +43,7 @@ import { LogoutComponent } from './modules/accounts/components/logout/logout.com
     BrowserAnimationsModule,
     AppRoutingModule,
     ToastrModule.forRoot({
-      positionClass: 'toast-top-right',
-      closeButton: true,
-      toastClass: 'exam-created exam-cancelled' 
+      closeButton: true
     })
     ],
   providers: [

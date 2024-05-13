@@ -9,14 +9,14 @@ namespace FacultyApp.FireForget;
 public class NotificationFireForgetHandler {
     private readonly ILogger<NotificationFireForgetHandler> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IHubContext<ExamsNotificationsHub, INotificationHub> _examinationNotifications;
+    private readonly IHubContext<NotificationsHub, INotificationsClient> _notificationsHub;
 
     public NotificationFireForgetHandler(ILogger<NotificationFireForgetHandler> logger,
                                         IServiceScopeFactory serviceScopeFactory,
-                                        IHubContext<ExamsNotificationsHub, INotificationHub> examinationNotifications) {
+                                        IHubContext<NotificationsHub, INotificationsClient> notificationsHub) {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
-        _examinationNotifications = examinationNotifications;
+        _notificationsHub = notificationsHub;
     }
 
     public void NotifyStudentsAboutExamination(string examinationId, NotificationType notificationType){
@@ -31,8 +31,7 @@ public class NotificationFireForgetHandler {
                                     .FirstOrDefaultAsync(e => e.Id == examinationId);
 
                 Notification notification = GenerateExaminationNotificationForStudents(examination, notificationType);
-
-                await _examinationNotifications.Clients.Group(examination.Course.Year.ToString()).SendMessage(notification);
+                await _notificationsHub.Clients.Group("year/"+examination.Course.Year).Receive(notification);
             } catch(Exception ex) {
                 _logger.LogError(ex.Message);
             }
