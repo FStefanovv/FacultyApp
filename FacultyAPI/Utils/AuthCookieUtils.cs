@@ -2,28 +2,43 @@ namespace FacultyApp.Utils;
 
 public static class AuthCookieUtils {
 
-    public static CookieOptions GetOptions (){
-        var cookieOptions = new CookieOptions {
+    public static  (CookieOptions, CookieOptions) GetOptions (){
+        var cookieOptionsHttpOnly = new CookieOptions {
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
             Expires = DateTime.UtcNow.AddHours(1),
         };
 
-        return cookieOptions;
+        var cookieOptionsExpiration = new CookieOptions {
+            HttpOnly = false,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddHours(1),
+        };
+
+        return (cookieOptionsHttpOnly, cookieOptionsExpiration);
     }
 
-    public static CookieOptions GetInvalidationOptions()
+    public static (CookieOptions, CookieOptions) GetInvalidationOptions()
        {
-           var cookieOptions = new CookieOptions()
+           var cookieOptionsHttpOnly = new CookieOptions()
                {
                    HttpOnly = true,
                    Secure = true,
                    SameSite = SameSiteMode.None,
                    Expires = DateTime.UtcNow.AddMinutes(-1),
                };
+
+            var cookieOptionsExpiration = new CookieOptions()
+               {
+                   HttpOnly = false,
+                   Secure = true,
+                   SameSite = SameSiteMode.None,
+                   Expires = DateTime.UtcNow.AddMinutes(-1),
+               };
             
-            return cookieOptions;
+            return (cookieOptionsHttpOnly, cookieOptionsExpiration);
        }
 
 }

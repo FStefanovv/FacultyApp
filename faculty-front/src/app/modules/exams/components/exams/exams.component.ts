@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../services/auth.service';
 import { ExamsService } from '../../services/exams.service';
 import { Examination } from '../../dtos/ExaminationDto';
+import { SessionService } from '../../../../services/session.service';
 
 @Component({
   selector: 'app-exams',
@@ -13,10 +14,12 @@ export class ExamsComponent implements OnInit {
   role!: string;
   exams: Examination[] = [];
 
-  constructor(private authService: AuthService, private examsService: ExamsService){}
+  constructor(private sessionService: SessionService, private examsService: ExamsService){}
 
   ngOnInit(): void {
-    this.role = this.authService.getRole();
+    const role = this.sessionService.getRole();
+    if(role)
+        this.role = role;
     this.examsService.getExams().subscribe({
       next: response => {
         this.exams = response;

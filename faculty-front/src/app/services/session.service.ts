@@ -8,34 +8,77 @@ import { SignalrService } from './signalr.service';
 })
 export class SessionService {
 
-  constructor(private authService: AuthService, private accountService: AccountService,
+  constructor(private accountService: AccountService,
               private signalRService: SignalrService
   ) { }
 
-  public initiateStudentSession() {
-    this.accountService.getUserData().subscribe({
-        next: async response => {
-            
-            let userData = response;
-
-            this.authService.saveUserData(userData);
-
-            const userDataString = this.authService.getUserData();
-            const userDataParsed = JSON.parse(userDataString);
-
-            await this.signalRService.startConnection('exams');
-            
-            if (userDataParsed && userDataParsed.hasOwnProperty('currentYear')) {
-                const currentYear = userData.currentYear;
-
-                this.signalRService.subscribeToYearGroup(currentYear);
-                this.signalRService.addListener();
-            }
-          },  
-        error: error => {
-          console.log(error.message);
+  public setUserSessionData(){
+    console.log('got here');
+    this.accountService.getUserData().subscribe({ 
+      next: async response => {            
+        let userData = response;
+        if(userData.currentYear){
+          console.log("it's a student");
+          sessionStorage.setItem('role', 'Student'); 
+          sessionStorage.setItem('currentYear', userData.currentYear.toString());
         }
-    });
-}
+        else {
+          console.log("it's a teacher");
+          sessionStorage.setItem('role', 'Teacher'); 
+        }
+      },  
+      error: error => {
+        console.log(error.message);
+      }
+    })
+  }
+
+  public async initiateStudentSession() {
+    
+    await this.signalRService.startConnection('exams');
+
+    const currentYear = sessionStorage.getItem("currentYear");
+
+    if(currentYear){
+      this.signalRService.subscribeToYearGroup(Number(currentYear));
+      this.signalRService.addListener();  
+    }
+  }
+
+  public initiateTeacherSession(){
+    
+  }
+
+  public getRole() : string | null {
+    return sessionStorage.getItem('role');
+  }
+
+  public isLoggedIn() : boolean {
+    const cookieValue = this.getCookie("X-Expiration-Cookie");
+    if(cookieValue){
+      const isExpired = this.isCookieExpired(cookieValue);
+      return !isExpired;
+    }
+    else return false;
+  }
+
+  private getCookie(name: string): string | null {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    
+    return cookieValue ? cookieValue?.pop() ?? null : null;
+  }
+
+  private isCookieExpired(cookieValue: string): boolean {
+    const decodedValue = decodeURIComponent(cookieValue);
+    const expirationDate = new Date(decodedValue);
+  
+    if (isNaN(expirationDate.getTime())) {
+      return true; 
+    }
+  
+    return expirationDate <= new Date();
+  }
+
+
 
 }

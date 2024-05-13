@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Course } from '../../dtos/CourseDto';
 import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
+import { SessionService } from '../../../../services/session.service';
 
 @Component({
   selector: 'courses-table',
@@ -15,10 +16,11 @@ export class CoursesTableComponent implements OnInit {
 
   role!: string;
 
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private sessionService: SessionService, private router: Router){}
 
   ngOnInit(): void {
-    this.role = this.authService.getRole();
+    const role = this.sessionService.getRole();
+    if(role) this.role = role;
   }
 
   createExam(courseId: string) {

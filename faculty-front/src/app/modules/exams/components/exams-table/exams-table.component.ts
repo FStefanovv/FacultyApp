@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { Examination } from '../../dtos/ExaminationDto';
 import { AuthService } from '../../../../services/auth.service';
 import { CheckCancellabilityDirective } from '../../../../directives/check-cancellability.directive';
+import { SessionService } from '../../../../services/session.service';
 
 @Component({
   selector: 'exams-table',
@@ -17,10 +18,11 @@ export class ExamsTableComponent implements OnInit {
 
   role!: string;
 
-  constructor(private authService: AuthService){}
+  constructor(private sessionService: SessionService){}
   
   ngOnInit(){
-    this.role = this.authService.getRole();
+    const role = this.sessionService.getRole();
+    if(role) this.role = role;
   }
 
   cancel(id: string) {

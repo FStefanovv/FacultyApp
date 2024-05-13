@@ -31,8 +31,10 @@ public class AccountsController : ControllerBase {
     public async Task<ActionResult> Login([FromBody] LoginDto loginDto) {
         try {
             var (token, loginResponse) = await _service.Authenticate(loginDto);
+            var (httpOnly, expiration) = AuthCookieUtils.GetOptions();
 
-            Response.Cookies.Append("X-Access-Token", token, AuthCookieUtils.GetOptions());
+            Response.Cookies.Append("X-Access-Token", token, httpOnly);
+            Response.Cookies.Append("X-Expiration-Cookie", expiration.Expires.ToString(), expiration);
             
             return Ok(loginResponse);
         } catch(NotFoundException) {
@@ -47,8 +49,10 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(200)]
     [Authorize]
     public ActionResult Logout(){
+        var (httpOnly, expiration) = AuthCookieUtils.GetInvalidationOptions();
+        Response.Cookies.Append("X-Access-Token", "", httpOnly);
+        Response.Cookies.Append("X-Expiration-Cookie", "", expiration);
 
-        Response.Cookies.Append("X-Access-Token", "", AuthCookieUtils.GetInvalidationOptions());
         return Ok();
     }
 
@@ -103,8 +107,8 @@ public class AccountsController : ControllerBase {
             return Ok(user);
         else {
             if(!User.Identity.IsAuthenticated) return Unauthorized();
-            string email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            if(email != user.Email) return Forbid();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if(userId != user.Id) return Forbid();
 
             return Ok(user);
         }

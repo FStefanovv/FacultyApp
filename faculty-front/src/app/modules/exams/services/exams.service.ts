@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService, tokenGetter } from '../../../services/auth.service';
 import { Course } from '../dtos/CourseDto';
 import { Examination } from '../dtos/ExaminationDto';
 

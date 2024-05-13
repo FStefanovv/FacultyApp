@@ -10,8 +10,6 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './modules/accounts/components/login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { tokenGetter } from './services/auth.service';
-import { AuthGuard } from './auth.guard';
 import { CreateExamComponent } from './modules/exams/components/create-exam/create-exam.component';
 import { MyCoursesComponent } from './modules/exams/components/my-courses/my-courses.component';
 import { CoursesTableComponent } from './modules/exams/components/courses-table/courses-table.component';
