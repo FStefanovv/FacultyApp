@@ -43,7 +43,7 @@ import { LogoutComponent } from './modules/accounts/components/logout/logout.com
     BrowserAnimationsModule,
     AppRoutingModule,
     ToastrModule.forRoot({
-      closeButton: true
+      closeButton: true,
     })
     ],
   providers: [

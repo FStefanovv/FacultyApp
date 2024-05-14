@@ -12,7 +12,6 @@ export class AccountService {
 
   constructor(private http: HttpClient) { }
 
-
   getUserData() : Observable<UserData> {
    
     const userDataUrl = 'https://localhost:5001/user-data';

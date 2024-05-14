@@ -27,7 +27,7 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(403)]
     [Authorize(Roles = "Teacher")]
     [RequireCourseOwnership]
-    public async Task<ActionResult> AddExamination([FromRoute] string courseId, [FromBody] NewExaminationDto newExaminationDto) {
+    public async Task<ActionResult> ScheduleExamination([FromRoute] string courseId, [FromBody] NewExaminationDto newExaminationDto) {
         var teacherId =  User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         try {
             newExaminationDto.CourseId = courseId;

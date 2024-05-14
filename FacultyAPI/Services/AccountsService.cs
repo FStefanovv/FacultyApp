@@ -8,8 +8,6 @@ namespace FacultyApp.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AutoMapper;
-using FacultyApp.Responses;
 using FacultyApp.Utils;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
@@ -23,7 +21,7 @@ public class AccountsService : IAccountsService {
         _configuration = configuration;
     }
 
-    public async Task<(string, LoginResponse)> Authenticate(LoginDto loginDTO) {
+    public async Task<string> Authenticate(LoginDto loginDTO) {
         User user = await _repository.GetByEmail(loginDTO.Email);
 
         if(user == null)
@@ -52,15 +50,7 @@ public class AccountsService : IAccountsService {
         );
         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
 
-        var loginResponse = new LoginResponse {
-            Email = user.Email,
-            Role = role,
-            UserId = user.Id 
-        };
-        
-
-
-        return (tokenString, loginResponse);
+        return tokenString;
     }
 
     public async Task<User> Register(RegistrationDto registrationDto){

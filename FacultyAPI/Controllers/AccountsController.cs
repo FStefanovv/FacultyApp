@@ -30,13 +30,13 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(404)]
     public async Task<ActionResult> Login([FromBody] LoginDto loginDto) {
         try {
-            var (token, loginResponse) = await _service.Authenticate(loginDto);
+            var token = await _service.Authenticate(loginDto);
             var (httpOnly, expiration) = AuthCookieUtils.GetOptions();
 
             Response.Cookies.Append("X-Access-Token", token, httpOnly);
             Response.Cookies.Append("X-Expiration-Cookie", expiration.Expires.ToString(), expiration);
             
-            return Ok(loginResponse);
+            return Ok();
         } catch(NotFoundException) {
             return NotFound();
         } catch(WrongPasswordException){

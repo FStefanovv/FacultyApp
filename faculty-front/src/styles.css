@@ -48,25 +48,50 @@
 
 
 .toast-container {
-    background-color: white;
     width: 50%;
+    max-width: 350px;
+    position: fixed;
+    bottom: 40px;
+    right: 20px; 
+    font-size: 16px;
+    line-height: 1.3
 }
 
+.toast-title {
+    font-weight: 600;
+    font-size: 18px;
+}
 
 .toast-success {
-    color: #0D3DDD ;
-    border-width: 3px;
-    border-color: #0D3DDD;
-    border-style: solid;
-    padding: 10px 14px;
+    color: white ;
+    background-color: #3C65F0;
+    border: 1px solid #3C65F0;
+    padding: 24px 30px;
+    border-radius: 6px;
 }
 
 .toast-error {
-    color: red ;
-    border-width: 3px;
-    border-color: red;
-    border-style: solid;
-    padding: 10px 14px;
+    color: white ;
+    background-color: #E63232;
+    border: 1px solid #E63232;
+    padding: 24px 30px;
+    border-radius: 6px;
+}
+
+.toast-close-button {
+    border-radius: 50%;
+    background-color: white;
+    color: #3C65F0;
+    transition: .2s ease;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+}
+
+.toast-close-button:hover {
+    background-color: #F3EDED;
+    cursor: pointer;
 }
 
 .notif {

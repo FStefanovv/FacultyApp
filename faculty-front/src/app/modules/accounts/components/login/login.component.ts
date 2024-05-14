@@ -17,19 +17,18 @@ export class LoginComponent {
   constructor(private authService: AuthService, private sessionService: SessionService, 
               private router: Router){}
 
-
   login(){
       this.authService.login(this.loginDto).subscribe({
         next: async () => {
-          this.sessionService.setUserSessionData();
+          await this.sessionService.setUserSessionData();
+          
           if(this.sessionService.getRole() == 'Student') {
             await this.sessionService.initiateStudentSession();
           }
           else {
             this.sessionService.initiateTeacherSession();
           }
-          
-          this.router.navigate(['/my-exams']) 
+          this.router.navigate(['/my-exams']);
         },
         error: error => {       
           if(error.status === 404)
