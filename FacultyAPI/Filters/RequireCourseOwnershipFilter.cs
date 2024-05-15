@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace FacultyApp.Filters;
+namespace FacultyApp.Attributes;
 
 public class RequireCourseOwnershipAttribute : ServiceFilterAttribute {
     public RequireCourseOwnershipAttribute() : base(typeof(RequireCourseOwnershipFilter)) { }

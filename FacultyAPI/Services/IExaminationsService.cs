@@ -7,7 +7,7 @@ public interface IExaminationsService
 {
     Task CancelExamination(string id);
     Task<Examination> CreateExamination(NewExaminationDto dto);
-    Task<Examination> GetById(string id);
-    List<ExaminationDto> GetExaminations(string userId, string filter, bool isTeacher);
-    Task<List<CourseDto>> GetTeacherCourses(string teacherId);
+    Task<Examination?> GetById(string id);
+     List<ExaminationDto> GetTeacherExaminations(string userId, string filter); 
+     Task<List<CourseDto>> GetCourses(string userId, string userRole);
 }

@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-public class RegistrationDto {
+public abstract class RegistrationDto {
     [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; }
 

@@ -1,8 +1,7 @@
 using System.Text;
 using FacultyApp;
 using FacultyApp.ApiKey;
-using FacultyApp.Filters;
-using FacultyApp.FireForget;
+using FacultyApp.Attributes;
 using FacultyApp.Notifications;
 using FacultyApp.Repository;
 using FacultyApp.Services;
@@ -31,14 +30,10 @@ builder.Services.AddDbContext<StudentsDbContext>(options =>
         .UseNpgsql(pgConnectionString)
 );
 
-
-
-
 builder.Services.AddAuthentication(options =>
     {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {   
     o.RequireHttpsMetadata = false;
@@ -65,7 +60,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
 builder.Services.AddScoped<IAccountsService, AccountsService>();
@@ -94,7 +89,7 @@ builder.Services.AddScoped<IApiKeyValidator, SingleApiKeyValidator>();
 builder.Services.AddScoped<AdminApiKeyAuthorizationFilter>();
 builder.Services.AddScoped<RequireCourseOwnershipFilter>();
 
-builder.Services.AddTransient<NotificationFireForgetHandler>();
+builder.Services.AddTransient<NotificationsService>();
 
 var app = builder.Build();
 

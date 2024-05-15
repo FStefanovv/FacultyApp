@@ -2,7 +2,7 @@ namespace FacultyApp.Utils;
 
 public static class AuthCookieUtils {
 
-    public static  (CookieOptions, CookieOptions) GetOptions (){
+    public static (CookieOptions, CookieOptions) GetOptions (){
         var cookieOptionsHttpOnly = new CookieOptions {
             HttpOnly = true,
             Secure = true,

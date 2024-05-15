@@ -2,7 +2,7 @@ namespace FacultyApp.Controller;
 
 using System.Security.Claims;
 using FacultyApp.Dto;
-using FacultyApp.Filters;
+using FacultyApp.Attributes;
 using FacultyApp.Model;
 using FacultyApp.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +34,7 @@ public class ExaminationsController : ControllerBase {
             newExaminationDto.TeacherId = teacherId;
 
             Examination newExamination = await _service.CreateExamination(newExaminationDto);
+            
             return CreatedAtAction(nameof(GetById), new {id = newExamination.Id}, newExamination);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
@@ -46,7 +47,7 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(404)]
     public async Task<ActionResult> GetById(string id)
     {
-        Examination exam = await _service.GetById(id);
+        Examination? exam = await _service.GetById(id);
 
         if(exam == null) return NotFound();
         else return Ok(exam);
@@ -71,25 +72,39 @@ public class ExaminationsController : ControllerBase {
 
     [HttpGet]
     [Route("~/my-courses")]
-    [Authorize(Roles = "Teacher")]
+    [Authorize]
     [ProducesResponseType(200)]
-    public async Task<ActionResult> GetTeacherCourses(){
-        var teacherId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var teacherCourses = await _service.GetTeacherCourses(teacherId);
+    [ProducesResponseType(400)]
+    public async Task<ActionResult> GetCourses(){
+        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        
+        if(userId == null || userRole == null)
+            return BadRequest();
 
-        return Ok(teacherCourses.ToList());
+        var courses = await _service.GetCourses(userId, userRole);
+
+        return Ok(courses.ToList());
     }
 
     [HttpGet]
     [Route("filter/{filter}")]
     [Authorize]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public ActionResult GetExams(string filter){
         var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
-        var examinations = _service.GetExaminations(userId, filter, role == "Teacher");
+        var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         
-        return Ok(examinations);
+        if(userId == null || userRole == null)
+            return BadRequest();
+
+
+        if(userRole == "Teacher")
+            return Ok(_service.GetTeacherExaminations(userId, filter));
+        
+        //handle student case
+        else 
+            return Ok();
     }
 }

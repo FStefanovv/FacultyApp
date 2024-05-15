@@ -13,6 +13,9 @@ public class StudentsDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ExaminationApplication>()
+            .HasKey(ea => new { ea.StudentId, ea.ExaminationId });
+
         modelBuilder.Entity<Teacher>().HasData(
             new Teacher
             {
@@ -100,5 +103,6 @@ public class StudentsDbContext : DbContext {
     public DbSet<Teacher> Teachers {get; set;}
     public DbSet<Course> Courses {get; set;}  
     public DbSet<Examination> Examinations {get; set;}
+    public DbSet<ExaminationApplication> Applications {get; set;}
 }
 

@@ -5,13 +5,15 @@ import { CreateExamComponent } from './modules/exams/components/create-exam/crea
 import { AuthGuard } from './auth.guard';
 import { MyCoursesComponent } from './modules/exams/components/my-courses/my-courses.component';
 import { ExamsComponent } from './modules/exams/components/exams/exams.component';
+import { StudentExamsComponent } from './modules/exams/components/student-exams/student-exams.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'create-exam/:courseId', component: CreateExamComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher']} },
   { path: 'create-exam', component: CreateExamComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher']} },
-  { path: 'my-courses', component: MyCoursesComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher']} },
-  { path: 'my-exams', component: ExamsComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher', 'Student'] }}
+  { path: 'my-courses', component: MyCoursesComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher', 'Student']} },
+  { path: 'exams', component: ExamsComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Teacher'] } },
+  { path: 'my-exams', component: StudentExamsComponent, canActivate: [AuthGuard], data: { allowedRoles: ['Student'] } }
 ];
 
 @NgModule({

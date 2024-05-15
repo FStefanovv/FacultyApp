@@ -8,21 +8,24 @@ namespace FacultyApp.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using FacultyApp.Utils;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 
 public class AccountsService : IAccountsService {
     private readonly IAccountsRepository _repository; 
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
 
-    public AccountsService(IAccountsRepository repository, IConfiguration configuration) {
+    public AccountsService(IAccountsRepository repository, IConfiguration configuration,
+                           IMapper mapper) {
         _repository = repository;
         _configuration = configuration;
+        _mapper = mapper;
     }
 
     public async Task<string> Authenticate(LoginDto loginDTO) {
-        User user = await _repository.GetByEmail(loginDTO.Email);
+        User? user = await _repository.GetByEmail(loginDTO.Email);
 
         if(user == null)
             throw new NotFoundException("No registered user with the entered email");
@@ -57,47 +60,24 @@ public class AccountsService : IAccountsService {
         User newUser;
         
         if(registrationDto is RegisterStudentDto studentDto){
-            var student = new Student
-            {
-                FirstName = studentDto.FirstName,
-                LastName = studentDto.LastName,
-                DateOfBirth = studentDto.DateOfBirth.Date, 
-                Email = studentDto.Email,
-                Password = PasswordHasher.HashPassword(studentDto.Password),
-                CurrentYear = 1, 
-                EnrolledIn = (uint)DateTime.Now.Year, 
-                Graduated = false, 
-                GPA = 0.0f 
-            };
-
+            var student = _mapper.Map<Student>(studentDto);  
             newUser = student;
         }
         else {
             var teacherDto = (RegisterTeacherDto)registrationDto;
-            var teacher = new Teacher {
-                FirstName = teacherDto.FirstName,
-                LastName = teacherDto.LastName,
-                DateOfBirth = teacherDto.DateOfBirth.Date, 
-                Email = teacherDto.Email,
-                Password = PasswordHasher.HashPassword(teacherDto.Password),
-                EmployedIn = (uint)DateTime.Now.Year,
-                Department = teacherDto.Department
-            };
-
+            var teacher = _mapper.Map<Teacher>(teacherDto);       
             newUser = teacher;
         }
            
         try {
             await _repository.Create(newUser);
             return newUser;
-        } catch(NpgsqlException ex){
-            throw new Exception(ex.Message);
         } catch(Exception ex){
             throw new Exception(ex.Message);
         }
     }
 
-    public async Task<User> GetById(string id) {
+    public async Task<User?> GetById(string id) {
         return await _repository.GetById(id);
     }
 }

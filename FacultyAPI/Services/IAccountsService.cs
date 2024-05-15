@@ -6,5 +6,5 @@ using FacultyApp.Model;
 public interface IAccountsService {
     Task<string> Authenticate(LoginDto loginDto);
     Task<User> Register(RegistrationDto registrationDto);
-    Task<User> GetById(string id);
+    Task<User?> GetById(string id);
 }

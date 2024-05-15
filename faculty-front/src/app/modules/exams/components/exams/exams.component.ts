@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../../services/auth.service';
 import { ExamsService } from '../../services/exams.service';
 import { Examination } from '../../dtos/ExaminationDto';
 import { SessionService } from '../../../../services/session.service';
+import { SelectionItem } from '../../../../models/selectionItem';
 
 @Component({
   selector: 'app-exams',
@@ -13,6 +13,11 @@ export class ExamsComponent implements OnInit {
 
   role!: string;
   exams: Examination[] = [];
+  selectedFilter: string = "all";
+  
+  examFilters: SelectionItem[] = [ 
+    new SelectionItem('all', 'all'), new SelectionItem('scheduled', 'scheduled') 
+  ];
 
   constructor(private sessionService: SessionService, private examsService: ExamsService){}
 
@@ -20,7 +25,7 @@ export class ExamsComponent implements OnInit {
     const role = this.sessionService.getRole();
     if(role)
         this.role = role;
-    this.examsService.getExams().subscribe({
+    this.examsService.getTeacherExams(this.selectedFilter).subscribe({
       next: response => {
         this.exams = response;
       },
@@ -41,4 +46,17 @@ export class ExamsComponent implements OnInit {
       }
     });
   }
+
+  filterChanged(filter: string) {
+    this.selectedFilter = filter;
+    this.examsService.getTeacherExams(this.selectedFilter).subscribe({
+      next: response => {
+        this.exams = response;
+      },
+      error: error => {
+        console.log(error.message);
+      }
+    });
+  }
+
 }

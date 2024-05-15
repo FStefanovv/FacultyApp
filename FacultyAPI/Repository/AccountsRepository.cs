@@ -11,17 +11,17 @@ public class AccountsRepository : IAccountsRepository {
         _context = context;
     }
 
-    public async Task<User> GetByEmail(string email) {
-        User user = await _context.Students.FirstOrDefaultAsync(s => s.Email == email);
+    public async Task<User?> GetByEmail(string email) {
+        User? user = await _context.Students.FirstOrDefaultAsync(s => s.Email == email);
         if(user != null) return user;
         user = await _context.Teachers.FirstOrDefaultAsync(t => t.Email == email);
         if(user != null) return user;
-
+ 
         return null;
     }
 
-    public async Task<User> GetById(string id){
-        User user = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
+    public async Task<User?> GetById(string id){
+        User? user = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
         if(user != null) return user;
         user = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id);
         if(user != null) return user;
@@ -37,7 +37,6 @@ public class AccountsRepository : IAccountsRepository {
             await _context.Students.AddAsync(student);
         else if(user is Teacher teacher)
             await _context.Teachers.AddAsync(teacher);
-
         await _context.SaveChangesAsync();
     }
 

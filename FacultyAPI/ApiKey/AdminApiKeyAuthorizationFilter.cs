@@ -5,7 +5,7 @@ namespace FacultyApp.ApiKey;
 
 public class AdminApiKeyAuthorizationFilter : IAuthorizationFilter
 {
-    private const string ApiKeyHeader = "AdminApiKey";
+    private const string ApiKeyHeader = "X-Admin-Api-Key";
     private readonly IApiKeyValidator _apiKeyValidator;
 
     public AdminApiKeyAuthorizationFilter(IApiKeyValidator apiKeyValidator){

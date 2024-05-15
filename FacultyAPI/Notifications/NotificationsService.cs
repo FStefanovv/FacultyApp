@@ -4,14 +4,14 @@ using FacultyApp.Notifications;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApp.FireForget;
+namespace FacultyApp.Notifications;
 
-public class NotificationFireForgetHandler {
-    private readonly ILogger<NotificationFireForgetHandler> _logger;
+public class NotificationsService {
+    private readonly ILogger<NotificationsService> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IHubContext<NotificationsHub, INotificationsClient> _notificationsHub;
 
-    public NotificationFireForgetHandler(ILogger<NotificationFireForgetHandler> logger,
+    public NotificationsService(ILogger<NotificationsService> logger,
                                         IServiceScopeFactory serviceScopeFactory,
                                         IHubContext<NotificationsHub, INotificationsClient> notificationsHub) {
         _logger = logger;
@@ -20,7 +20,7 @@ public class NotificationFireForgetHandler {
     }
 
     public void NotifyStudentsAboutExamination(string examinationId, NotificationType notificationType){
-         Task.Run( async () => {
+        Task.Run( async () => {
             try {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<StudentsDbContext>();
@@ -35,8 +35,7 @@ public class NotificationFireForgetHandler {
             } catch(Exception ex) {
                 _logger.LogError(ex.Message);
             }
-        }
-        );
+        });
     }
    
     private Notification GenerateExaminationNotificationForStudents(Examination examination, NotificationType notificationType){

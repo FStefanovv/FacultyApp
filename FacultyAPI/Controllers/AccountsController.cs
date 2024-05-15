@@ -34,7 +34,7 @@ public class AccountsController : ControllerBase {
             var (httpOnly, expiration) = AuthCookieUtils.GetOptions();
 
             Response.Cookies.Append("X-Access-Token", token, httpOnly);
-            Response.Cookies.Append("X-Expiration-Cookie", expiration.Expires.ToString(), expiration);
+            Response.Cookies.Append("X-Expiration-Cookie", expiration.Expires.ToString()!, expiration);
             
             return Ok();
         } catch(NotFoundException) {
@@ -92,22 +92,29 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [ProducesResponseType(404)]
-    public async Task<ActionResult> GetById(string id){
-        var routeTemplate = ControllerContext.ActionDescriptor.AttributeRouteInfo.Template;
+    public async Task<ActionResult> GetById(string? id){
+        var routeTemplate = ControllerContext.ActionDescriptor.AttributeRouteInfo!.Template;
 
         if(routeTemplate == "user-data"){
             id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             _logger.LogInformation($"user data route used, extracted id is ${id}");
         }
 
-        User user  = await _service.GetById(id);
+        if(id == null){
+            return BadRequest("User id not available");
+        }
+
+        User? user  = await _service.GetById(id);
+
         if(user == null) 
-            return NotFound("User with the supplied id doesn't exists");
+            return NotFound("User with the provided id doesn't exists");
+
         else if(user is Teacher)
             return Ok(user);
-        else {
-            if(!User.Identity.IsAuthenticated) return Unauthorized();
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        else  {
+            if(!User.Identity!.IsAuthenticated) return Unauthorized();
+            string? userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if(userId != user.Id) return Forbid();
 
             return Ok(user);

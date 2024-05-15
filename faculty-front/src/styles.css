@@ -14,7 +14,6 @@
     outline-color: #389AB9;
 }
 
-
 .btn-regular {
     color: white;
     background-color: #2A525F ;
@@ -45,7 +44,6 @@
     background-color: white;
     color: red;
 }
-
 
 .toast-container {
     width: 50%;
@@ -94,25 +92,6 @@
     cursor: pointer;
 }
 
-.notif {
-    background-color: white;
-    border-width: 3px;
-    border-style: solid;
-    border-radius: 4px;
-    width: 50%;
-    padding: 10px 16px;
-}
-
-.notif-regular {
-    color: #0D3DDD ;
-    border-color: #0D3DDD ;
-}
-
-.notif-cancel{
-    color: red;
-    border-color: redl
-}
-
 table {
     border-collapse: collapse;
 }
@@ -136,8 +115,4 @@ tbody > tr {
 tbody > tr:hover {
     background-color: #D4DEEC;
     cursor: pointer;
-}
-
-  
- 
-  
+} 

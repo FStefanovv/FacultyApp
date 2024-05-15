@@ -55,7 +55,7 @@ namespace FacultyApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f1c99bf0-3667-431c-81a8-8d538a2369be",
+                            Id = "d1c270fa-13b5-43ab-9d08-8afed239cb68",
                             Department = "Computer Science",
                             EspbPoints = 7,
                             Name = "Introduction to Programming",
@@ -64,7 +64,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "0af7852d-b849-40df-92ef-f4c617f67f99",
+                            Id = "2c606000-1d29-4c01-a560-c886160e2fd6",
                             Department = "Computer Science",
                             EspbPoints = 4,
                             Name = "Data Structures and Algorithms",
@@ -73,7 +73,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "c3cddfd9-9d04-4b42-9c4a-8ae262e74036",
+                            Id = "969680cc-9dca-461c-b9ef-a89244bfcd5d",
                             Department = "Databases",
                             EspbPoints = 5,
                             Name = "Database Management Systems",
@@ -112,6 +112,27 @@ namespace FacultyApp.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Examinations");
+                });
+
+            modelBuilder.Entity("FacultyApp.Model.ExaminationApplication", b =>
+                {
+                    b.Property<string>("StudentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExaminationId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("AppliedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("Graded")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("StudentId", "ExaminationId");
+
+                    b.HasIndex("ExaminationId");
+
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("FacultyApp.Model.Student", b =>
@@ -158,7 +179,7 @@ namespace FacultyApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0c9a54ee-a0ca-453e-93b0-cb70b2cb47d8",
+                            Id = "0105ec87-91f4-4b81-8867-8152e6121c99",
                             CurrentYear = 3,
                             DateOfBirth = new DateTime(1995, 5, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "alicesmith@gmail.com",
@@ -171,7 +192,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "57865505-59b8-45bb-9f4a-d6a9691ee0f9",
+                            Id = "7a3b8ea0-376b-486a-998e-d17bf138ca4e",
                             CurrentYear = 1,
                             DateOfBirth = new DateTime(1998, 9, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "bobjohnson@gmail.com",
@@ -273,6 +294,25 @@ namespace FacultyApp.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("FacultyApp.Model.ExaminationApplication", b =>
+                {
+                    b.HasOne("FacultyApp.Model.Examination", "Examination")
+                        .WithMany()
+                        .HasForeignKey("ExaminationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FacultyApp.Model.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Examination");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("FacultyApp.Model.Course", b =>

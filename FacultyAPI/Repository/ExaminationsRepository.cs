@@ -7,8 +7,11 @@ namespace FacultyApp.Repository;
 public class ExaminationsRepository : IExaminationsRepository {
     private readonly StudentsDbContext _context;
 
-    public ExaminationsRepository(StudentsDbContext context) {
+    private readonly ILogger<ExaminationsRepository> _logger;
+
+    public ExaminationsRepository(StudentsDbContext context, ILogger<ExaminationsRepository> logger) {
         _context = context;
+        _logger = logger;
     }
 
     public async Task Create(Examination examination)
@@ -17,44 +20,39 @@ public class ExaminationsRepository : IExaminationsRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Examination> GetById(string id)
+    public async Task<Examination?> GetById(string id)
     {
-        return await _context.Examinations.FirstOrDefaultAsync(e => e.Id == id);
+        Examination? examination = await _context.Examinations.FirstOrDefaultAsync(e => e.Id == id);
+        return examination;
     }
 
     public async Task SaveChangesAsync(){
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Course>> GetTeacherCoursesEager(string teacherId){
-        var courses = await _context.Courses.Include(c => c.Teacher)
-                                    .Where(c => c.TeacherId == teacherId).ToListAsync();
-
-        return courses;
-    }
-
-    public List<Examination> GetExaminations(string userId, string filter, bool isTeacher){
-        if(filter == "scheduled"){
-            if(isTeacher)
-                return  _context.Examinations
-                        .Include(e => e.Teacher)
-                        .Include(e => e.Course)
-                        .Where(e => e.TeacherId == userId && e.Status == ExaminationStatus.SCHEDULED 
-                                    && e.ScheduledFor > DateTime.UtcNow).ToList();
-            //else handle student case
-             
-            return null;
+    public List<Examination> GetTeacherExaminations(string teacherId, string filter){        
+        if(filter == "scheduled"){    
+            return  _context.Examinations
+                    .Include(e => e.Teacher)
+                    .Include(e => e.Course)
+                    .Where(e => e.TeacherId == teacherId && e.Status == ExaminationStatus.SCHEDULED 
+                                && e.ScheduledFor > DateTime.UtcNow).ToList();
+           
         } else {
-            if(isTeacher) 
-                return _context.Examinations
-                        .Include(e => e.Teacher)
-                        .Include(e => e.Course)
-                        .Where(e => e.TeacherId == userId).ToList();
-            //else handle student case
-            return null;
+            return _context.Examinations
+                    .Include(e => e.Teacher)
+                    .Include(e => e.Course)
+                    .Where(e => e.TeacherId == teacherId).ToList();     
         }
     }
 
-
-
+    public async Task<List<Course>> GetCoursesEager(string userId, string userRole)
+    {
+        if(userRole == "Teacher")
+            return _context.Courses.Where(c => c.TeacherId == userId).ToList();
+        else {
+            Student student =  await _context.Students.FirstOrDefaultAsync(u => userId == u.Id) ?? throw new Exception("No user with provided id");
+            return _context.Courses.Where(c => c.Year <= student.CurrentYear).ToList();
+        }
+    }
 }

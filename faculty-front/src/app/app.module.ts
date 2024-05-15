@@ -19,6 +19,7 @@ import { GetStatusStringDirective } from './directives/get-status-string.directi
 import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 import { AddAccessTokenInterceptor } from './interceptors/add-access-token.interceptor';
 import { LogoutComponent } from './modules/accounts/components/logout/logout.component';
+import { StudentExamsComponent } from './modules/exams/components/student-exams/student-exams.component';
 
 
 
@@ -34,7 +35,8 @@ import { LogoutComponent } from './modules/accounts/components/logout/logout.com
     CheckCancellabilityDirective,
     GetStatusStringDirective,
     DropdownSelectComponent,
-    LogoutComponent
+    LogoutComponent,
+    StudentExamsComponent
   ],
   imports: [
     BrowserModule,

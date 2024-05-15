@@ -25,7 +25,7 @@ export class ExamsService {
     return this.http.post(createExamUrl, newExaminationDto, {  });
   }
 
-  getExams(filter?: any) : Observable<Examination[]> {
+  getTeacherExams(filter?: any) : Observable<Examination[]> {
     let getExamsUrl = 'https://localhost:5001/exams/filter/';
     if(filter !== undefined)
       getExamsUrl +=  filter;
@@ -38,8 +38,6 @@ export class ExamsService {
 
   cancel(id: string) : any{
     const cancelExamUrl = `https://localhost:5001/exams/${id}`;
-
-
     return this.http.delete<void>(cancelExamUrl);
   }
 }

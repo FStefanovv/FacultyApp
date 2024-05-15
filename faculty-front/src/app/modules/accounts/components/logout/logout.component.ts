@@ -10,17 +10,11 @@ import { SessionService } from '../../../../services/session.service';
 })
 export class LogoutComponent {
 
-  constructor(private authService: AuthService, private router: Router, private sessionService: SessionService){}
+  constructor(private authService: AuthService, private router: Router){}
 
   logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        sessionStorage.clear();
-        this.router.navigate(['/login']);
-      },
-      error: error => {
-        console.log(error.message);
-      }
-    })
+    this.authService.logout().subscribe();
+    sessionStorage.clear();
+    this.router.navigate(['/login']);  
   }
 }
