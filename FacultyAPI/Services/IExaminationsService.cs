@@ -8,6 +8,6 @@ public interface IExaminationsService
     Task CancelExamination(string id);
     Task<Examination> CreateExamination(NewExaminationDto dto);
     Task<Examination?> GetById(string id);
-     List<ExaminationDto> GetTeacherExaminations(string userId, string filter); 
-     Task<List<CourseDto>> GetCourses(string userId, string userRole);
+     List<Examination> GetTeacherExaminations(string userId, string filter); 
+     Task<List<Course>> GetCourses(string userId, string userRole);
 }

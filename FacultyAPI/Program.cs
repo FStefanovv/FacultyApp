@@ -68,17 +68,24 @@ builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddSignalR();
 
 var allOrigins = "AllowAllOrigins";
+var allowAngularFront = "AllowAngularFront";
 
 builder.Services.AddCors(options => {
     options.AddPolicy(
-    name: allOrigins,
-    policy => {
-        policy.AllowAnyHeader();
-        policy.WithOrigins("http://localhost:4200"); 
-        policy.AllowCredentials();
-        policy.AllowAnyMethod();
-    });
-
+            name: allOrigins,
+            policy => {
+                policy.AllowAnyOrigin(); 
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+        });
+    options.AddPolicy(
+            name: allowAngularFront,
+            policy => {
+                policy.WithOrigins("http://localhost:4200");
+                policy.AllowAnyHeader();
+                policy.AllowCredentials();
+                policy.AllowAnyMethod();
+        });
 });
 
 builder.Services.AddScoped<IExaminationsRepository, ExaminationsRepository>();
@@ -104,7 +111,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseCors(allOrigins);
+app.UseCors(allowAngularFront);
 
 app.UseAuthorization();
 

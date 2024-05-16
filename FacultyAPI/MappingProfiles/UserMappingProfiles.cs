@@ -49,5 +49,16 @@ public class CreateTeacherMappingProfile : Profile {
         opt => opt.MapFrom(_ => (uint)DateTime.Now.Year)
     );
   }
+}
 
+public class GetStudentDataMappingProfile : Profile {
+  public GetStudentDataMappingProfile(){
+    CreateMap<Student, StudentDto>();
+  }
+}
+
+public class GetTeacherDataMappingProfile : Profile {
+  public GetTeacherDataMappingProfile(){
+    CreateMap<Teacher, TeacherDto>();
+  }
 }

@@ -51,27 +51,15 @@ public class ExaminationsService : IExaminationsService
         return await _repository.GetById(id);
     }
 
-    public async Task<List<CourseDto>> GetCourses(string userId, string userRole) {
+    public async Task<List<Course>> GetCourses(string userId, string userRole) {
         List<Course> teacherCourses = await _repository.GetCoursesEager(userId, userRole);
-        List<CourseDto> courseDtos = new ();
-        foreach(Course course in teacherCourses) {
-            var current = _mapper.Map<CourseDto>(course);          
-            courseDtos.Add(current);
-        }
-        
-        return courseDtos;
+       
+        return teacherCourses;
     }
 
-    public List<ExaminationDto> GetTeacherExaminations(string userId, string filter){
+    public List<Examination> GetTeacherExaminations(string userId, string filter){
         List<Examination> exams =  _repository.GetTeacherExaminations(userId, filter);
         
-        List<ExaminationDto> examDtos = new ();
-
-        foreach(Examination exam in exams){
-            var current = _mapper.Map<ExaminationDto>(exam);
-            examDtos.Add(current);
-        }
-
-        return examDtos;
+        return exams;
     }
 }

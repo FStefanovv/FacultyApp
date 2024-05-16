@@ -7,6 +7,7 @@ using FacultyApp.Model;
 using FacultyApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 [ApiController]
 [Route("exams")]
@@ -14,9 +15,14 @@ public class ExaminationsController : ControllerBase {
     private readonly IExaminationsService _service;
     private readonly ILogger<ExaminationsController> _logger;
 
-    public ExaminationsController(IExaminationsService service, ILogger<ExaminationsController> logger) {
+    private readonly IMapper _mapper;
+
+    public ExaminationsController(IExaminationsService service, 
+                                  ILogger<ExaminationsController> logger,
+                                  IMapper mapper) {
         _service = service;
         _logger = logger;
+        _mapper = mapper;
     }
 
     [HttpPost]
@@ -50,12 +56,15 @@ public class ExaminationsController : ControllerBase {
         Examination? exam = await _service.GetById(id);
 
         if(exam == null) return NotFound();
-        else return Ok(exam);
+
+        ExaminationDto dto = _mapper.Map<ExaminationDto>(exam);
+
+        return Ok(dto);
     }
 
     [HttpDelete]
     [Route("{examId}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
@@ -64,7 +73,7 @@ public class ExaminationsController : ControllerBase {
     public async Task<ActionResult> CancelExamination(string examId) {
         try {
             await _service.CancelExamination(examId);
-            return Ok();
+            return NoContent();
         } catch(Exception ex){
             return BadRequest(ex.Message);
         }       
@@ -84,7 +93,9 @@ public class ExaminationsController : ControllerBase {
 
         var courses = await _service.GetCourses(userId, userRole);
 
-        return Ok(courses.ToList());
+        List<CourseDto> courseDtos = courses.Select(course => _mapper.Map<CourseDto>(course)).ToList();
+
+        return Ok(courseDtos);
     }
 
     [HttpGet]
@@ -93,6 +104,7 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     public ActionResult GetExams(string filter){
+
         var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         
@@ -100,11 +112,16 @@ public class ExaminationsController : ControllerBase {
             return BadRequest();
 
 
+        List<Examination> exams =  new();
+
         if(userRole == "Teacher")
-            return Ok(_service.GetTeacherExaminations(userId, filter));
-        
-        //handle student case
-        else 
-            return Ok();
+            exams = _service.GetTeacherExaminations(userId, filter);   
+        else {
+
+        }
+
+        var examDtos = exams.Select(exam => _mapper.Map<ExaminationDto>(exam));
+
+        return Ok(examDtos);
     }
 }

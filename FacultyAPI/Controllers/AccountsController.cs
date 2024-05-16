@@ -10,6 +10,7 @@ using FacultyApp.ApiKey;
 using FacultyApp.Exceptions;
 using FacultyApp.Utils;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 [ApiController]
 [Route("accounts")]
@@ -17,10 +18,13 @@ public class AccountsController : ControllerBase {
     
     private readonly IAccountsService _service;
     private readonly ILogger<AccountsController> _logger;
+    private readonly IMapper _mapper;
 
-    public AccountsController(IAccountsService service, ILogger<AccountsController> logger){
+    public AccountsController(IAccountsService service, ILogger<AccountsController> logger,
+                                IMapper mapper){
         _service = service;
         _logger = logger;
+        _mapper = mapper;
     }
 
     [HttpPost]
@@ -92,12 +96,12 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [ProducesResponseType(404)]
+    [ResponseCache(Location=ResponseCacheLocation.Client, Duration=120)]
     public async Task<ActionResult> GetById(string? id){
         var routeTemplate = ControllerContext.ActionDescriptor.AttributeRouteInfo!.Template;
 
         if(routeTemplate == "user-data"){
             id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            _logger.LogInformation($"user data route used, extracted id is ${id}");
         }
 
         if(id == null){
@@ -109,15 +113,21 @@ public class AccountsController : ControllerBase {
         if(user == null) 
             return NotFound("User with the provided id doesn't exists");
 
-        else if(user is Teacher)
-            return Ok(user);
+    
 
+        if(user is Teacher) {
+            var teacherDto = _mapper.Map<TeacherDto>((Teacher)user);
+            return Ok(teacherDto);
+        }
         else  {
             if(!User.Identity!.IsAuthenticated) return Unauthorized();
             string? userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            
             if(userId != user.Id) return Forbid();
 
-            return Ok(user);
+            var studentDto = _mapper.Map<StudentDto>((Student)user);
+    
+            return Ok(studentDto);
         }
     }
 }

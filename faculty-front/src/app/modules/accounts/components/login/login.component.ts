@@ -24,11 +24,12 @@ export class LoginComponent {
           
           if(this.sessionService.getRole() == 'Student') {
             await this.sessionService.initiateStudentSession();
+            this.router.navigate(['/my-exams']);
           }
           else {
             this.sessionService.initiateTeacherSession();
+            this.router.navigate(['/exams']);
           }
-          this.router.navigate(['/my-exams']);
         },
         error: error => {       
           if(error.status === 404)

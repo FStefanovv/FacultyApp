@@ -60,13 +60,11 @@ public class AccountsService : IAccountsService {
         User newUser;
         
         if(registrationDto is RegisterStudentDto studentDto){
-            var student = _mapper.Map<Student>(studentDto);  
-            newUser = student;
+            newUser = _mapper.Map<Student>(studentDto);  
         }
         else {
             var teacherDto = (RegisterTeacherDto)registrationDto;
-            var teacher = _mapper.Map<Teacher>(teacherDto);       
-            newUser = teacher;
+            newUser = _mapper.Map<Teacher>(teacherDto);       
         }
            
         try {
