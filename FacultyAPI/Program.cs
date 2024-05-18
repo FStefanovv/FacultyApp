@@ -5,6 +5,7 @@ using FacultyApp.Attributes;
 using FacultyApp.Notifications;
 using FacultyApp.Repository;
 using FacultyApp.Services;
+using FacultyApp.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -97,6 +98,8 @@ builder.Services.AddScoped<AdminApiKeyAuthorizationFilter>();
 builder.Services.AddScoped<RequireCourseOwnershipFilter>();
 
 builder.Services.AddTransient<NotificationsService>();
+
+builder.Services.AddTransient<ITokenGenerator, TokenGenerator>();
 
 var app = builder.Build();
 

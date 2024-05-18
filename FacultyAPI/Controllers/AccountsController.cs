@@ -99,7 +99,6 @@ public class AccountsController : ControllerBase {
     [ResponseCache(Location=ResponseCacheLocation.Client, Duration=120)]
     public async Task<ActionResult> GetById(string? id){
         var routeTemplate = ControllerContext.ActionDescriptor.AttributeRouteInfo!.Template;
-
         if(routeTemplate == "user-data"){
             id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         }
@@ -112,8 +111,6 @@ public class AccountsController : ControllerBase {
 
         if(user == null) 
             return NotFound("User with the provided id doesn't exists");
-
-    
 
         if(user is Teacher) {
             var teacherDto = _mapper.Map<TeacherDto>((Teacher)user);

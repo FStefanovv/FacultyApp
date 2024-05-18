@@ -52,7 +52,7 @@ public class ExaminationsService : IExaminationsService
     }
 
     public async Task<List<Course>> GetCourses(string userId, string userRole) {
-        List<Course> teacherCourses = await _repository.GetCoursesEager(userId, userRole);
+        List<Course> teacherCourses = await _repository.GetCourses(userId, userRole);
        
         return teacherCourses;
     }

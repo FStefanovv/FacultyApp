@@ -46,7 +46,7 @@ public class ExaminationsRepository : IExaminationsRepository {
         }
     }
 
-    public async Task<List<Course>> GetCoursesEager(string userId, string userRole)
+    public async Task<List<Course>> GetCourses(string userId, string userRole)
     {
         if(userRole == "Teacher")
             return _context.Courses.Where(c => c.TeacherId == userId).ToList();

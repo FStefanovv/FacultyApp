@@ -5,23 +5,18 @@ using FacultyApp.Exceptions;
 
 namespace FacultyApp.Services;
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using FacultyApp.Utils;
-using Microsoft.IdentityModel.Tokens;
 
 public class AccountsService : IAccountsService {
     private readonly IAccountsRepository _repository; 
-    private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
+    private readonly ITokenGenerator _tokenGenerator;
 
-    public AccountsService(IAccountsRepository repository, IConfiguration configuration,
-                           IMapper mapper) {
+    public AccountsService(IAccountsRepository repository, IMapper mapper, ITokenGenerator tokenGenerator) {
         _repository = repository;
-        _configuration = configuration;
         _mapper = mapper;
+        _tokenGenerator = tokenGenerator;
     }
 
     public async Task<string> Authenticate(LoginDto loginDTO) {
@@ -38,20 +33,9 @@ public class AccountsService : IAccountsService {
         if(user is Teacher) role = "Teacher";
         else role = "Student";
 
-        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtAuth:Secret"]));
-        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-        var tokeOptions = new JwtSecurityToken(
-            issuer: "https://localhost:5001",
-            audience: "https://localhost:5001",
-            claims: new List<Claim> {
-                new Claim(ClaimTypes.Role, role),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            },
-            expires: DateTime.Now.AddHours(1),
-            signingCredentials: signinCredentials
-        );
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+        var jwtUserData = new JwtUserDataDto(user.Id, user.Email, role);
+
+        var tokenString = _tokenGenerator.GenerateToken(jwtUserData);
 
         return tokenString;
     }
