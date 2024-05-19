@@ -100,7 +100,7 @@ public class AccountsController : ControllerBase {
     public async Task<ActionResult> GetById(string? id){
         var routeTemplate = ControllerContext.ActionDescriptor.AttributeRouteInfo!.Template;
         if(routeTemplate == "user-data"){
-            id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            id = (string?)HttpContext.Items["UserId"];
         }
 
         if(id == null){
@@ -118,7 +118,7 @@ public class AccountsController : ControllerBase {
         }
         else  {
             if(!User.Identity!.IsAuthenticated) return Unauthorized();
-            string? userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            string? userId = (string?)HttpContext.Items["UserId"];
             
             if(userId != user.Id) return Forbid();
 

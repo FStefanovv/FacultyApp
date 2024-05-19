@@ -34,7 +34,7 @@ public class ExaminationsController : ControllerBase {
     [Authorize(Roles = "Teacher")]
     [RequireCourseOwnership]
     public async Task<ActionResult> ScheduleExamination([FromRoute] string courseId, [FromBody] NewExaminationDto newExaminationDto) {
-        var teacherId =  User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        string? teacherId = (string?)HttpContext.Items["UserId"];
         try {
             newExaminationDto.CourseId = courseId;
             newExaminationDto.TeacherId = teacherId;
@@ -85,8 +85,8 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     public async Task<ActionResult> GetCourses(){
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        string? userId = (string?)HttpContext.Items["UserId"];
+        string? userRole = (string?)HttpContext.Items["UserRole"];
         
         if(userId == null || userRole == null)
             return BadRequest();
@@ -105,8 +105,8 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(400)]
     public ActionResult GetExams(string filter){
 
-        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        string? userId = (string?)HttpContext.Items["UserId"];
+        string? userRole = (string?)HttpContext.Items["UserRole"];
         
         if(userId == null || userRole == null)
             return BadRequest();
@@ -123,5 +123,19 @@ public class ExaminationsController : ControllerBase {
         var examDtos = exams.Select(exam => _mapper.Map<ExaminationDto>(exam));
 
         return Ok(examDtos);
+    }
+
+    [HttpPost]
+    [Route("apply/{id}")]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [Authorize(Roles = "Student")]
+    public ActionResult ApplyForExamination(string id){
+        
+
+
+        return Ok();
     }
 }

@@ -1,7 +1,7 @@
 import { Directive, Input, ElementRef, Renderer2, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 
 @Directive({
-  selector: '[CheckCancellability]'
+  selector: '[checkCancellability]'
 })
 export class CheckCancellabilityDirective implements OnInit, OnChanges {
 
@@ -22,14 +22,12 @@ export class CheckCancellabilityDirective implements OnInit, OnChanges {
 
   private setVisibility() {
     const currentDate = new Date();
-    const twoDaysBeforeScheduled = new Date(this.scheduledFor);
+    let twoDaysBeforeScheduled = new Date(this.scheduledFor);
     twoDaysBeforeScheduled.setDate(twoDaysBeforeScheduled.getDate() - 2);
 
     if (this.status === 0 && currentDate <= twoDaysBeforeScheduled) {
-      //this.renderer.addClass(this.el.nativeElement, 'btn-cancel');
       this.renderer.setStyle(this.el.nativeElement, 'display', 'inline-block');
     } else {
-      //this.renderer.removeClass(this.el.nativeElement, 'btn-cancel');
       this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
     }
   }

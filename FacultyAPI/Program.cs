@@ -2,6 +2,7 @@ using System.Text;
 using FacultyApp;
 using FacultyApp.ApiKey;
 using FacultyApp.Attributes;
+using FacultyApp.Middleware;
 using FacultyApp.Notifications;
 using FacultyApp.Repository;
 using FacultyApp.Services;
@@ -113,6 +114,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseMiddleware<UserClaimsMiddleware>();
 
 app.UseCors(allowAngularFront);
 

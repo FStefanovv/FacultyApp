@@ -1,15 +1,18 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
 @Directive({
-  selector: '[Status]'
+  selector: '[resolveExamStatus]'
 })
-export class GetStatusStringDirective implements OnInit {
+export class ResolveExamStatusDirective implements OnInit {
 
   @Input()
   status!: number;
 
   @Input()
   examDate!: Date;
+
+  @Input()
+  role!: string;
 
   constructor(private el: ElementRef) { }
 
@@ -22,6 +25,19 @@ export class GetStatusStringDirective implements OnInit {
   }
 
   private setStatus() {
+    let statusString: string;
+    let color: string;
+    
+    if(this.role=='Teacher')
+      [statusString, color] = this.resolveExamStatusForTeacher();
+    else 
+    [statusString, color] = this.resolveExamStatusForStudent();
+
+    this.el.nativeElement.textContent = statusString;
+    this.el.nativeElement.style.color = color;
+  }
+
+  private resolveExamStatusForTeacher() : [string, string] {
     let statusString: string;
     let color: string;
 
@@ -44,8 +60,11 @@ export class GetStatusStringDirective implements OnInit {
       statusString = '';
       color = '';
     }
+    return [statusString, color];
+  }
 
-    this.el.nativeElement.textContent = statusString;
-    this.el.nativeElement.style.color = color;
+  private resolveExamStatusForStudent() : [string, string] {
+
+    return ["", ""];
   }
 }

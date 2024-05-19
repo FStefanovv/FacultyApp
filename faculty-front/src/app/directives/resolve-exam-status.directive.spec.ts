@@ -1,8 +1,8 @@
-import { GetStatusStringDirective } from './get-status-string.directive';
+import { ResolveExamStatusDirective } from './resolve-exam-status.directive';
 
 describe('GetStatusStringDirective', () => {
   it('should create an instance', () => {
-    const directive = new GetStatusStringDirective();
+    const directive = new ResolveExamStatusDirective();
     expect(directive).toBeTruthy();
   });
 });

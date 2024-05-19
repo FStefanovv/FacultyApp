@@ -36,8 +36,8 @@ public class ExaminationsRepository : IExaminationsRepository {
                     .Include(e => e.Teacher)
                     .Include(e => e.Course)
                     .Where(e => e.TeacherId == teacherId && e.Status == ExaminationStatus.SCHEDULED 
-                                && e.ScheduledFor > DateTime.UtcNow).ToList();
-           
+                                && e.ScheduledFor > DateTime.UtcNow)
+                    .OrderBy(e => e.ScheduledFor).ToList();
         } else {
             return _context.Examinations
                     .Include(e => e.Teacher)

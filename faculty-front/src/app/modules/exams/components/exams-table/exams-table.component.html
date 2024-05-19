@@ -4,20 +4,20 @@
         <th>Course</th>
         <th>Scheduled For</th>
         <th>Status</th>
-        <th *ngIf="role == 'Teacher'">Available Places</th>
+        <th>Available Places</th>
         <th *ngIf="role == 'Student'">Teacher Name</th>
-        <th *ngIf="role == 'Teacher'"></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let exam of examinations">
         <td>{{ exam.courseName }}</td>
         <td>{{ exam.scheduledFor | date:'dd/MMM/yyy hh:mm' }}</td>    
-        <td Status [examDate]="exam.scheduledFor" [status]="exam.status"></td>
+        <td resolveExamStatus [role]="role" [examDate]="exam.scheduledFor" [status]="exam.status"></td>
         <td *ngIf="role == 'Teacher'">{{exam.availablePlaces}}</td>
         <td *ngIf="role == 'Student'">{{ exam.teacherName }}</td>
         <td *ngIf="role == 'Teacher'">
-          <button CheckCancellability [scheduledFor]="exam.scheduledFor" [status]="exam.status" class="btn-cancel" (click)="cancel(exam.id)">Cancel</button>
+          <button checkCancellability [scheduledFor]="exam.scheduledFor" [status]="exam.status" class="btn-cancel" (click)="cancel(exam.id)">Cancel</button>
         </td>
       </tr>
     </tbody>

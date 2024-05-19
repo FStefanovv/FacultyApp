@@ -8,14 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './modules/accounts/components/login/login.component';
-import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CreateExamComponent } from './modules/exams/components/create-exam/create-exam.component';
 import { MyCoursesComponent } from './modules/exams/components/my-courses/my-courses.component';
 import { CoursesTableComponent } from './modules/exams/components/courses-table/courses-table.component';
 import { ExamsTableComponent } from './modules/exams/components/exams-table/exams-table.component';
-import { ExamsComponent } from './modules/exams/components/exams/exams.component';
+import { TeacherExamsComponent } from './modules/exams/components/teacher-exams/teacher-exams.component';
 import { CheckCancellabilityDirective } from './directives/check-cancellability.directive';
-import { GetStatusStringDirective } from './directives/get-status-string.directive';
+import { ResolveExamStatusDirective } from './directives/resolve-exam-status.directive';
 import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 import { AddAccessTokenInterceptor } from './interceptors/add-access-token.interceptor';
 import { LogoutComponent } from './modules/accounts/components/logout/logout.component';
@@ -31,9 +31,9 @@ import { StudentExamsComponent } from './modules/exams/components/student-exams/
     MyCoursesComponent,
     CoursesTableComponent,
     ExamsTableComponent,
-    ExamsComponent,
+    TeacherExamsComponent,
     CheckCancellabilityDirective,
-    GetStatusStringDirective,
+    ResolveExamStatusDirective,
     DropdownSelectComponent,
     LogoutComponent,
     StudentExamsComponent
