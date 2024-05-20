@@ -3,10 +3,12 @@ using FacultyApp.Dto;
 using FacultyApp.Enums;
 using FacultyApp.Notifications;
 using FacultyApp.Model;
-using FacultyApp.Repository;
 using FacultyApp.Exceptions;
 
-namespace FacultyApp.Services;
+namespace FacultyApp.Services.Implementations;
+
+using FacultyApp.Services.Interfaces;
+using FacultyApp.Repository.Interfaces;
 
 public class TeacherExaminationsService : ITeacherExaminationsService
 {
@@ -49,12 +51,6 @@ public class TeacherExaminationsService : ITeacherExaminationsService
     public async Task<Examination?> GetById(string id)
     {
         return await _repository.GetById(id);
-    }
-
-    public async Task<List<Course>> GetCourses(string userId, string userRole) {
-        List<Course> teacherCourses = await _repository.GetCourses(userId, userRole);
-       
-        return teacherCourses;
     }
 
     public List<Examination> GetTeacherExaminations(string userId, string filter){

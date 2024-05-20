@@ -54,7 +54,7 @@ export class ResolveExamStatusDirective implements OnInit {
     }
     else if(this.status == 0) {
       statusString = 'past';
-      color = '#717171 ';
+      color = '#717171';
     }
     else {
       statusString = '';

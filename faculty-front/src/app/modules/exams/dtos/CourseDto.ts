@@ -6,4 +6,6 @@ export class Course {
     public espbPoints!: number;
     public teacher!: string;
     public teacherId!: string;
+    public passed!: string;
+    public grade!: number;
 }

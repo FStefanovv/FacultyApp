@@ -1,8 +1,9 @@
 using FacultyApp.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApp.Repository;
+namespace FacultyApp.Repository.Implementations;
 
+using FacultyApp.Repository.Interfaces;
 
 public class AccountsRepository : IAccountsRepository {
     private readonly StudentsDbContext _context;
@@ -28,8 +29,6 @@ public class AccountsRepository : IAccountsRepository {
 
         return null;
     }
-
-
 
     public async Task Create(User user){
         

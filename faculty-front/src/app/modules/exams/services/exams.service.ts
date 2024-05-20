@@ -18,15 +18,14 @@ export class ExamsService {
   }
 
   create(courseId: string, examDate: Date, numOfPlaces: number) : any {
-    const createExamUrl = 'https://localhost:5001/exams/'+courseId;
+    const createExamUrl = 'https://localhost:5001/exams/' + courseId;
     const newExaminationDto = { scheduledFor: examDate, availablePlaces: numOfPlaces };
 
-    
     return this.http.post(createExamUrl, newExaminationDto, {  });
   }
 
   getTeacherExams(filter?: any) : Observable<Examination[]> {
-    let getExamsUrl = 'https://localhost:5001/exams/filter/';
+    let getExamsUrl = 'https://localhost:5001/teacher-exams/';
     if(filter !== undefined)
       getExamsUrl +=  filter;
     else {
@@ -36,7 +35,7 @@ export class ExamsService {
     return this.http.get<Examination[]>(getExamsUrl)
   }
 
-  cancel(id: string) : any{
+  cancel(id: string) : any {
     const cancelExamUrl = `https://localhost:5001/exams/${id}`;
     return this.http.delete<void>(cancelExamUrl);
   }

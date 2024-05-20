@@ -6,6 +6,8 @@
         <th>Department</th>
         <th>ESPB Points</th>
         <th *ngIf="role === 'Student'">Teacher</th>
+        <th *ngIf="role === 'Student'">Status</th>
+        <th *ngIf="role === 'Student'"></th>
         <th *ngIf="role === 'Teacher'"></th>
       </tr>
     </thead>
@@ -16,9 +18,17 @@
         <td>{{ course.department }}</td>
         <td>{{ course.espbPoints }}</td>
         <td *ngIf="role === 'Student'">{{ course.teacher }}</td>
-        <td *ngIf="role === 'Teacher'"><button (click)="createExam(course.id)" class="btn-regular">Create Exam</button></td>
-        
+        <td *ngIf="role === 'Student'" [ngStyle]="{'color': course.passed ? '#2A525F' : '#717171'}">
+          {{ course.passed ? 'Passed with grade course.grade' : 'Not passed yet'}}
+        </td>
+        <td *ngIf="role === 'Student' && !course.passed">
+          <button class="btn-regular"  [routerLink]="['/apply-exam', course.id]">
+            Apply for Exam
+          </button>
+        </td>
+        <td *ngIf="role === 'Teacher'">
+          <button (click)="createExam(course.id)" class="btn-regular">Create Exam</button>
+        </td>
       </tr>
     </tbody>
-  </table>
-  
+</table>

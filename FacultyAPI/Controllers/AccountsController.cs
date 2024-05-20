@@ -1,10 +1,9 @@
 namespace FacultyApp.Controller;
 
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 using FacultyApp.Dto;
-using FacultyApp.Services;
+using FacultyApp.Services.Interfaces;
 using FacultyApp.Model;
 using FacultyApp.ApiKey;
 using FacultyApp.Exceptions;
@@ -66,8 +65,8 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(400)]
     public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentDto registerStudentDto) {
         try {
-            Student createdStudent = (Student)await _service.Register(registerStudentDto);
-            return CreatedAtAction(nameof(GetById), new { id = createdStudent.Id}, createdStudent);
+            string studentId = await _service.Register(registerStudentDto);
+            return CreatedAtAction(nameof(GetById), new { id = studentId});
             
         } catch(Exception ex){
             return BadRequest(ex.Message);
@@ -81,8 +80,8 @@ public class AccountsController : ControllerBase {
     [ProducesResponseType(400)]
     public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherDto registerTeacherDto) {
         try {
-            Teacher createdTeacher = (Teacher)await _service.Register(registerTeacherDto);
-            return CreatedAtAction(nameof(GetById), new { id = createdTeacher.Id}, createdTeacher);
+            string teacherId = await _service.Register(registerTeacherDto);
+            return CreatedAtAction(nameof(GetById), new { id = teacherId});
             
         } catch(Exception ex){
             return BadRequest(ex.Message);
@@ -107,24 +106,21 @@ public class AccountsController : ControllerBase {
             return BadRequest("User id not available");
         }
 
-        User? user  = await _service.GetById(id);
+        UserDataDto? userData  = await _service.GetById(id);
 
-        if(user == null) 
+        if(userData == null) 
             return NotFound("User with the provided id doesn't exists");
 
-        if(user is Teacher) {
-            var teacherDto = _mapper.Map<TeacherDto>((Teacher)user);
-            return Ok(teacherDto);
+        if(userData is TeacherDto) {
+            return Ok(userData);
         }
         else  {
             if(!User.Identity!.IsAuthenticated) return Unauthorized();
             string? userId = (string?)HttpContext.Items["UserId"];
             
-            if(userId != user.Id) return Forbid();
-
-            var studentDto = _mapper.Map<StudentDto>((Student)user);
+            if(userId != userData.Id) return Forbid();
     
-            return Ok(studentDto);
+            return Ok(userData);
         }
     }
 }

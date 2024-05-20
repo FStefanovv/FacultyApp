@@ -20,6 +20,7 @@ import { DropdownSelectComponent } from './components/dropdown-select/dropdown-s
 import { AddAccessTokenInterceptor } from './interceptors/add-access-token.interceptor';
 import { LogoutComponent } from './modules/accounts/components/logout/logout.component';
 import { StudentExamsComponent } from './modules/exams/components/student-exams/student-exams.component';
+import { ApplyForExamComponent } from './modules/exams/components/apply-for-exam/apply-for-exam.component';
 
 
 
@@ -36,7 +37,8 @@ import { StudentExamsComponent } from './modules/exams/components/student-exams/
     ResolveExamStatusDirective,
     DropdownSelectComponent,
     LogoutComponent,
-    StudentExamsComponent
+    StudentExamsComponent,
+    ApplyForExamComponent
   ],
   imports: [
     BrowserModule,

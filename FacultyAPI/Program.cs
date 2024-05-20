@@ -4,8 +4,10 @@ using FacultyApp.ApiKey;
 using FacultyApp.Attributes;
 using FacultyApp.Middleware;
 using FacultyApp.Notifications;
-using FacultyApp.Repository;
-using FacultyApp.Services;
+using FacultyApp.Repository.Interfaces;
+using FacultyApp.Repository.Implementations;
+using FacultyApp.Services.Interfaces;
+using FacultyApp.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -58,7 +60,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
@@ -87,10 +88,12 @@ builder.Services.AddCors(options => {
         });
 });
 
+builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
+builder.Services.AddScoped<ICoursesService, CoursesService>();
+
 builder.Services.AddScoped<IExaminationsRepository, ExaminationsRepository>();
 builder.Services.AddScoped<ITeacherExaminationsService, TeacherExaminationsService>();
 builder.Services.AddScoped<IStudentExaminationsService, StudentExaminationsService>();
-
 
 builder.Services.AddScoped<IApiKeyValidator, SingleApiKeyValidator>();
 
@@ -100,11 +103,8 @@ builder.Services.AddScoped<StudentExaminationApplicationFilter>();
 
 builder.Services.AddTransient<NotificationsService>();
 
-builder.Services.AddTransient<ITokenGenerator, TokenGenerator>();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

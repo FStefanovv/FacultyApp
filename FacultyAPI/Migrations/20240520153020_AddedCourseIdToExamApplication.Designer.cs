@@ -3,6 +3,7 @@ using System;
 using FacultyApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FacultyApp.Migrations
 {
     [DbContext(typeof(StudentsDbContext))]
-    partial class StudentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240520153020_AddedCourseIdToExamApplication")]
+    partial class AddedCourseIdToExamApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace FacultyApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ef9bea75-9617-40f8-b187-c4a0f8a75290",
+                            Id = "1f6e3588-6e88-4ed1-aa3f-906dbd353eb6",
                             Department = "Computer Science",
                             EspbPoints = 7,
                             Name = "Introduction to Programming",
@@ -64,7 +66,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "429b8c62-01c4-4e00-b15d-8bf8340d19b1",
+                            Id = "f30952cc-388e-45c7-9331-ef6476e4f097",
                             Department = "Computer Science",
                             EspbPoints = 4,
                             Name = "Data Structures and Algorithms",
@@ -73,7 +75,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "a6f938c3-e1db-45e7-9a20-2d23c283c768",
+                            Id = "f8a04881-de7e-453f-93ef-c12f52c60175",
                             Department = "Databases",
                             EspbPoints = 5,
                             Name = "Database Management Systems",
@@ -128,9 +130,6 @@ namespace FacultyApp.Migrations
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("Grade")
-                        .HasColumnType("integer");
 
                     b.Property<bool?>("Graded")
                         .HasColumnType("boolean");
@@ -189,7 +188,7 @@ namespace FacultyApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8c5d9286-849b-4f24-aadc-c7cf269bf04e",
+                            Id = "b953dabc-5369-4e19-a4b7-355c4cee4489",
                             CurrentYear = 3,
                             DateOfBirth = new DateTime(1995, 5, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "alicesmith@gmail.com",
@@ -202,7 +201,7 @@ namespace FacultyApp.Migrations
                         },
                         new
                         {
-                            Id = "977f193c-ab84-4b34-8525-8d1b095b4e85",
+                            Id = "47687f62-4247-4ea7-a098-3f1fba976f8c",
                             CurrentYear = 1,
                             DateOfBirth = new DateTime(1998, 9, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "bobjohnson@gmail.com",

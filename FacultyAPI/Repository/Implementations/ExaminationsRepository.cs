@@ -1,8 +1,9 @@
 using FacultyApp.Enums;
 using FacultyApp.Model;
 using Microsoft.EntityFrameworkCore;
+using FacultyApp.Repository.Interfaces;
 
-namespace FacultyApp.Repository;
+namespace FacultyApp.Repository.Implementations;
 
 public class ExaminationsRepository : IExaminationsRepository {
     private readonly StudentsDbContext _context;
@@ -53,21 +54,9 @@ public class ExaminationsRepository : IExaminationsRepository {
         return new();
     }
 
-
-    public async Task<List<Course>> GetCourses(string userId, string userRole)
-    {
-        if(userRole == "Teacher")
-            return _context.Courses.Where(c => c.TeacherId == userId).ToList();
-        else {
-            Student student =  await _context.Students.FirstOrDefaultAsync(u => userId == u.Id) ?? throw new Exception("No user with provided id");
-            return _context.Courses.Where(c => c.Year <= student.CurrentYear).ToList();
-        }
-    }
-
     public async Task CreateApplication(ExaminationApplication examinationApplication){
         await _context.ExamApplications.AddAsync(examinationApplication);
         await _context.SaveChangesAsync();
     }
-
 }
 

@@ -6,7 +6,7 @@ using FacultyApp.Enums;
 namespace FacultyApp.Model;
 
 public class ExaminationApplication {
-   
+    
     [Required]
     public string StudentId {get; set;}
     [ForeignKey("StudentId")]
@@ -27,4 +27,5 @@ public class ExaminationApplication {
     public ExamApplicationStatus Status {get; set;}
 
     public bool? Graded {get; set;}
+    public int? Grade {get; set;}
 }

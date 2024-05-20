@@ -1,9 +1,11 @@
 using FacultyApp.Exceptions;
 using FacultyApp.Model;
-using FacultyApp.Repository;
+using FacultyApp.Repository.Interfaces;
 using FacultyApp.Enums;
 
-namespace FacultyApp.Services;
+namespace FacultyApp.Services.Implementations;
+
+using FacultyApp.Services.Interfaces;
 
 public class StudentExaminationsService : IStudentExaminationsService {
 
@@ -34,16 +36,26 @@ public class StudentExaminationsService : IStudentExaminationsService {
 
         bool hasApplied = student.ExamApplications.Any(ea => ea.ExaminationId == examId && (ea.Status == ExamApplicationStatus.APPLIED || ea.Status == ExamApplicationStatus.CANCELLED));
         if(hasApplied) throw new Exception("Student has already applied for this examination"); 
+        
         ExaminationApplication examinationApplication = new ExaminationApplication {
                                                             StudentId = studentId,
                                                             ExaminationId = examination.Id,
                                                             CourseId = examination.CourseId,
                                                             AppliedOn = DateTime.UtcNow, 
+                                                            Status = ExamApplicationStatus.APPLIED,
                                                             Graded = false
                                                         };
 
 
+        examination.AvailablePlaces -= 1;
+
         await _examsRepository.CreateApplication(examinationApplication);
+    }
+
+    public List<ExaminationApplication> GetStudentExaminations(string studentId, string filter){
+        List<ExaminationApplication> exams =  _examsRepository.GetStudentExaminations(studentId, filter);
+        
+        return exams;
     }
 
 }

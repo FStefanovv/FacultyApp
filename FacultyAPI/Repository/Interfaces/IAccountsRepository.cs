@@ -1,4 +1,6 @@
-namespace FacultyApp.Repository;
+using System.Xml;
+
+namespace FacultyApp.Repository.Interfaces;
 
 using FacultyApp.Model;
 
