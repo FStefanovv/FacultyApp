@@ -3,7 +3,7 @@ namespace FacultyApp.Services;
 using FacultyApp.Dto;
 using FacultyApp.Model;
 
-public interface IExaminationsService
+public interface ITeacherExaminationsService
 {
     Task CancelExamination(string id);
     Task<Examination> CreateExamination(NewExaminationDto dto);

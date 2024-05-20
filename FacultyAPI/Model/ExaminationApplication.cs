@@ -18,8 +18,11 @@ public class ExaminationApplication {
     public virtual Examination Examination {get; set;}
 
     [Required]
-    public DateTime AppliedOn {get; set;}
+    public string CourseId {get; set;}
 
+    [Required]
+    public DateTime AppliedOn {get; set;}
+    
     [Required]
     public ExamApplicationStatus Status {get; set;}
 

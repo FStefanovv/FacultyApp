@@ -6,14 +6,11 @@ using FacultyApp.Middleware;
 using FacultyApp.Notifications;
 using FacultyApp.Repository;
 using FacultyApp.Services;
-using FacultyApp.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -91,12 +88,15 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddScoped<IExaminationsRepository, ExaminationsRepository>();
-builder.Services.AddScoped<IExaminationsService, ExaminationsService>();
+builder.Services.AddScoped<ITeacherExaminationsService, TeacherExaminationsService>();
+builder.Services.AddScoped<IStudentExaminationsService, StudentExaminationsService>();
+
 
 builder.Services.AddScoped<IApiKeyValidator, SingleApiKeyValidator>();
 
 builder.Services.AddScoped<AdminApiKeyAuthorizationFilter>();
 builder.Services.AddScoped<RequireCourseOwnershipFilter>();
+builder.Services.AddScoped<StudentExaminationApplicationFilter>();
 
 builder.Services.AddTransient<NotificationsService>();
 

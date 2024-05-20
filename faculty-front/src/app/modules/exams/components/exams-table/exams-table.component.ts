@@ -1,7 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Examination } from '../../dtos/ExaminationDto';
-import { AuthService } from '../../../../services/auth.service';
-import { CheckCancellabilityDirective } from '../../../../directives/check-cancellability.directive';
 import { SessionService } from '../../../../services/session.service';
 
 @Component({

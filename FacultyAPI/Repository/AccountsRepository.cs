@@ -21,7 +21,7 @@ public class AccountsRepository : IAccountsRepository {
     }
 
     public async Task<User?> GetById(string id){
-        User? user = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
+        User? user = await _context.Students.Where(s => s.Id == id).Include(s => s.ExamApplications).FirstOrDefaultAsync();
         if(user != null) return user;
         user = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id);
         if(user != null) return user;

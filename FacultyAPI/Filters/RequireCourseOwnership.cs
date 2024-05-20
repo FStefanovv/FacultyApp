@@ -11,35 +11,42 @@ public class RequireCourseOwnershipAttribute : ServiceFilterAttribute {
 public class RequireCourseOwnershipFilter : IAuthorizationFilter
 {
     private readonly ILogger<RequireCourseOwnershipFilter> _logger;
-    private readonly StudentsDbContext _context;
+    private readonly StudentsDbContext _dbContext;
 
     public RequireCourseOwnershipFilter(ILogger<RequireCourseOwnershipFilter> logger,
-                                        StudentsDbContext context){
+                                        StudentsDbContext dbContext){
         _logger = logger;
-        _context = context;
+        _dbContext = dbContext;
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        string userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;        
-        string courseId = context.RouteData.Values["courseId"]?.ToString();
+        string? userId = context.HttpContext.Items["UserId"]?.ToString();
+
+        if(String.IsNullOrEmpty(userId)){
+            context.Result = new ForbidResult();
+            return;
+        }
+
+        string? courseId = context.RouteData.Values["courseId"]?.ToString();
 
         if(!String.IsNullOrEmpty(courseId)) {
-            if(!_context.Courses.Any(c => c.Id == courseId && c.TeacherId == userId)){
+            if(!_dbContext.Courses.Any(c => c.Id == courseId && c.TeacherId == userId)){
                 context.Result = new ForbidResult();
                 return;
             } 
             else return;
         }
 
-        string examId = context.RouteData.Values["examId"]?.ToString();
+        string? examId = context.RouteData.Values["examId"]?.ToString();
         if(!String.IsNullOrEmpty(examId)){
-            if(!_context.Examinations.Any(e => e.Id == examId && e.TeacherId == userId)){
+            if(!_dbContext.Examinations.Any(e => e.Id == examId && e.TeacherId == userId)){
                 context.Result = new ForbidResult();
                 return;
             }
             else return;
         }
+
         context.Result = new BadRequestResult();
     }
 }

@@ -12,15 +12,18 @@ using AutoMapper;
 [ApiController]
 [Route("exams")]
 public class ExaminationsController : ControllerBase {
-    private readonly IExaminationsService _service;
+    private readonly ITeacherExaminationsService _teacherService;
+    private readonly IStudentExaminationsService _studentService;
+    private readonly IMapper _mapper;
     private readonly ILogger<ExaminationsController> _logger;
 
-    private readonly IMapper _mapper;
 
-    public ExaminationsController(IExaminationsService service, 
+    public ExaminationsController(ITeacherExaminationsService teacherService, 
+                                  IStudentExaminationsService studentService,
                                   ILogger<ExaminationsController> logger,
                                   IMapper mapper) {
-        _service = service;
+        _teacherService = teacherService;
+        _studentService = studentService;
         _logger = logger;
         _mapper = mapper;
     }
@@ -39,7 +42,7 @@ public class ExaminationsController : ControllerBase {
             newExaminationDto.CourseId = courseId;
             newExaminationDto.TeacherId = teacherId;
 
-            Examination newExamination = await _service.CreateExamination(newExaminationDto);
+            Examination newExamination = await _teacherService.CreateExamination(newExaminationDto);
             
             return CreatedAtAction(nameof(GetById), new {id = newExamination.Id}, newExamination);
         } catch (Exception ex) {
@@ -53,7 +56,7 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(404)]
     public async Task<ActionResult> GetById(string id)
     {
-        Examination? exam = await _service.GetById(id);
+        Examination? exam = await _teacherService.GetById(id);
 
         if(exam == null) return NotFound();
 
@@ -72,7 +75,7 @@ public class ExaminationsController : ControllerBase {
     [RequireCourseOwnership]
     public async Task<ActionResult> CancelExamination(string examId) {
         try {
-            await _service.CancelExamination(examId);
+            await _teacherService.CancelExamination(examId);
             return NoContent();
         } catch(Exception ex){
             return BadRequest(ex.Message);
@@ -91,7 +94,7 @@ public class ExaminationsController : ControllerBase {
         if(userId == null || userRole == null)
             return BadRequest();
 
-        var courses = await _service.GetCourses(userId, userRole);
+        var courses = await _teacherService.GetCourses(userId, userRole);
 
         List<CourseDto> courseDtos = courses.Select(course => _mapper.Map<CourseDto>(course)).ToList();
 
@@ -115,7 +118,7 @@ public class ExaminationsController : ControllerBase {
         List<Examination> exams =  new();
 
         if(userRole == "Teacher")
-            exams = _service.GetTeacherExaminations(userId, filter);   
+            exams = _teacherService.GetTeacherExaminations(userId, filter);   
         else {
 
         }
@@ -126,16 +129,23 @@ public class ExaminationsController : ControllerBase {
     }
 
     [HttpPost]
-    [Route("apply/{id}")]
+    [Route("apply/{examId}")]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Authorize(Roles = "Student")]
-    public ActionResult ApplyForExamination(string id){
+    [StudentExaminationApplication]
+    public async Task<ActionResult> ApplyForExamination(string examId){
+        string? studentId = HttpContext.Items["UserId"]?.ToString();
+
+        if(studentId == null) return BadRequest("No student id provided");
         
-
-
-        return Ok();
+        try {
+            await _studentService.ApplyForExamination(studentId, examId);
+            return Ok();
+        }  catch(Exception ex){
+            return BadRequest(ex.Message);
+        }
     }
 }

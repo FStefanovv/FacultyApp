@@ -16,4 +16,5 @@ public class Student : User {
     [Range(6.0, 10.0, ErrorMessage = "GPA must have values between 6.00 and 10.00")]
     public float GPA {get; set;}
 
+    public virtual List<ExaminationApplication> ExamApplications {get; set;} = new ();
 }

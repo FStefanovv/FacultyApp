@@ -8,13 +8,13 @@ using FacultyApp.Exceptions;
 
 namespace FacultyApp.Services;
 
-public class ExaminationsService : IExaminationsService
+public class TeacherExaminationsService : ITeacherExaminationsService
 {
     private readonly IExaminationsRepository _repository;
     private readonly NotificationsService _notificationsService;
     private readonly IMapper _mapper;
 
-    public ExaminationsService(IExaminationsRepository repository,
+    public TeacherExaminationsService(IExaminationsRepository repository,
                                NotificationsService notificationsService,
                                IMapper mapper){
         _repository = repository;

@@ -46,6 +46,14 @@ public class ExaminationsRepository : IExaminationsRepository {
         }
     }
 
+    public List<ExaminationApplication> GetStudentExaminations(string studentId, string filter){
+        if(filter == "all")    
+            return _context.ExamApplications.Where(ea => ea.StudentId == studentId).ToList();
+        
+        return new();
+    }
+
+
     public async Task<List<Course>> GetCourses(string userId, string userRole)
     {
         if(userRole == "Teacher")
@@ -55,4 +63,11 @@ public class ExaminationsRepository : IExaminationsRepository {
             return _context.Courses.Where(c => c.Year <= student.CurrentYear).ToList();
         }
     }
+
+    public async Task CreateApplication(ExaminationApplication examinationApplication){
+        await _context.ExamApplications.AddAsync(examinationApplication);
+        await _context.SaveChangesAsync();
+    }
+
 }
+

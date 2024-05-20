@@ -103,6 +103,6 @@ public class StudentsDbContext : DbContext {
     public DbSet<Teacher> Teachers {get; set;}
     public DbSet<Course> Courses {get; set;}  
     public DbSet<Examination> Examinations {get; set;}
-    public DbSet<ExaminationApplication> Applications {get; set;}
+    public DbSet<ExaminationApplication> ExamApplications {get; set;}
 }
 
