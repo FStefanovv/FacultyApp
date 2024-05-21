@@ -92,7 +92,7 @@ builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
 
 builder.Services.AddScoped<IExaminationsRepository, ExaminationsRepository>();
-builder.Services.AddScoped<ITeacherExaminationsService, TeacherExaminationsService>();
+builder.Services.AddScoped<IExaminationsService, ExaminationsService>();
 builder.Services.AddScoped<IStudentExaminationsService, StudentExaminationsService>();
 
 builder.Services.AddScoped<IApiKeyValidator, SingleApiKeyValidator>();

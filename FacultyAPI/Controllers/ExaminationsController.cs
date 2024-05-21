@@ -7,16 +7,17 @@ using FacultyApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using FacultyApp.Exceptions;
 
 [ApiController]
 [Route("exams")]
 public class ExaminationsController : ControllerBase {
-    private readonly ITeacherExaminationsService _teacherService;
+    private readonly IExaminationsService _service;
     private readonly IMapper _mapper;
 
-    public ExaminationsController(ITeacherExaminationsService teacherService, 
+    public ExaminationsController(IExaminationsService service, 
                                   IMapper mapper) {
-        _teacherService = teacherService;
+        _service = service;
         _mapper = mapper;
     }
 
@@ -27,7 +28,7 @@ public class ExaminationsController : ControllerBase {
     [ProducesResponseType(404)]
     public async Task<ActionResult> GetById(string id)
     {
-        Examination? exam = await _teacherService.GetById(id);
+        Examination? exam = await _service.GetById(id);
 
         if(exam == null) return NotFound();
 
@@ -50,7 +51,7 @@ public class ExaminationsController : ControllerBase {
             newExaminationDto.CourseId = courseId;
             newExaminationDto.TeacherId = teacherId;
 
-            Examination newExamination = await _teacherService.CreateExamination(newExaminationDto);
+            Examination newExamination = await _service.CreateExamination(newExaminationDto);
             
             return CreatedAtAction(nameof(GetById), new {id = newExamination.Id}, newExamination);
         } catch (Exception ex) {
@@ -69,7 +70,7 @@ public class ExaminationsController : ControllerBase {
     [RequireCourseOwnership]
     public async Task<ActionResult> CancelExamination(string examId) {
         try {
-            await _teacherService.CancelExamination(examId);
+            await _service.CancelExamination(examId);
             return NoContent();
         } catch(Exception ex){
             return BadRequest(ex.Message);
@@ -88,10 +89,28 @@ public class ExaminationsController : ControllerBase {
         if(userId == null)
             return BadRequest();
  
-        List<Examination> exams = _teacherService.GetTeacherExaminations(userId, filter);   
+        List<Examination> exams = _service.GetTeacherExaminations(userId, filter);   
 
         var examDtos = exams.Select(exam => _mapper.Map<ExaminationDto>(exam));
 
         return Ok(examDtos);
+    }
+
+
+    [HttpGet]
+    [Route("~/course-exams/{courseId}/{filter}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult GetCourseExaminations(string courseId, string? filter){
+        try {
+            if(String.IsNullOrEmpty(filter))
+                filter = "scheduled";
+            var exams = _service.GetCourseExaminations(courseId, filter);
+
+            return Ok(exams);
+
+        } catch(NotFoundException){
+            return NotFound("Non-existant course");
+        }
     }
 }

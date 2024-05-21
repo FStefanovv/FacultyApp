@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from '../modules/accounts/services/account.service';
 import { SignalrService } from './signalr.service';
-import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +15,13 @@ export class SessionService {
         this.accountService.getUserData().subscribe({ 
             next: response => { 
                 let userData = response;
-
+                
                 if (userData.currentYear) {
-                    sessionStorage.setItem('role', 'Student'); 
-                    sessionStorage.setItem('currentYear', userData.currentYear.toString());
+                    localStorage.setItem('role', 'Student'); 
+                    localStorage.setItem('currentYear', userData.currentYear.toString());
                 } else {
-                    sessionStorage.setItem('role', 'Teacher'); 
+                    localStorage.removeItem('currentYear');
+                    localStorage.setItem('role', 'Teacher'); 
                 }
                 resolve(); 
             },  
@@ -37,7 +36,7 @@ export class SessionService {
   public async initiateStudentSession() {
     await this.signalRService.startConnection();
 
-    const currentYear = sessionStorage.getItem("currentYear");
+    const currentYear = localStorage.getItem("currentYear");
 
     if(currentYear){
       await this.signalRService.subscribeToYearGroup(Number(currentYear));
@@ -50,35 +49,27 @@ export class SessionService {
   }
 
   public getRole() : string | null {
-    return sessionStorage.getItem('role');
+    if(this.isLoggedIn())
+      return localStorage.getItem('role');
+
+    else return null;
   }
 
   public isLoggedIn() : boolean {
-    const cookieValue = this.getCookie("X-Expiration-Cookie");
-    if(cookieValue){
-      const isExpired = this.isCookieExpired(cookieValue);
-      return !isExpired;
+    const exists = this.expirationCookieExists("X-Expiration-Cookie");
+
+    if(exists) {
+      return true;
     }
-    else return false;
-  }
-
-  private getCookie(name: string): string | null {
-    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    
-    return cookieValue ? cookieValue?.pop() ?? null : null;
-  }
-
-  private isCookieExpired(cookieValue: string): boolean {
-    const decodedValue = decodeURIComponent(cookieValue);
-    const expirationDate = new Date(decodedValue);
-  
-    if (isNaN(expirationDate.getTime())) {
-      return true; 
+    else {
+      localStorage.clear();
+      return false;
     }
-  
-    return expirationDate <= new Date();
   }
 
+  private expirationCookieExists(name: string): boolean {
+    const cookiePattern = new RegExp('(^|;)\\s*' + name + '\\s*=');
 
-
+    return cookiePattern.test(document.cookie);
+  }
 }

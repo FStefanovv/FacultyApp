@@ -10,13 +10,13 @@ namespace FacultyApp.Services.Implementations;
 using FacultyApp.Services.Interfaces;
 using FacultyApp.Repository.Interfaces;
 
-public class TeacherExaminationsService : ITeacherExaminationsService
+public class ExaminationsService : IExaminationsService
 {
     private readonly IExaminationsRepository _repository;
     private readonly NotificationsService _notificationsService;
     private readonly IMapper _mapper;
 
-    public TeacherExaminationsService(IExaminationsRepository repository,
+    public ExaminationsService(IExaminationsRepository repository,
                                NotificationsService notificationsService,
                                IMapper mapper){
         _repository = repository;
@@ -57,5 +57,14 @@ public class TeacherExaminationsService : ITeacherExaminationsService
         List<Examination> exams =  _repository.GetTeacherExaminations(userId, filter);
         
         return exams;
+    }
+
+    public List<ExaminationDto> GetCourseExaminations(string courseId, string filter)
+    {  
+        var exams = _repository.GetCourseExaminations(courseId, filter);
+
+        var examDtos = exams.Select(e => _mapper.Map<ExaminationDto>(e)).ToList();
+
+        return examDtos;
     }
 }

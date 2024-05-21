@@ -64,7 +64,7 @@ export class CreateExamComponent implements OnInit {
       return;
     }
 
-    this.examsService.create(this.courseId, this.examDate, this.numOfPlaces).subscribe({
+    this.examsService.createExam(this.courseId, this.examDate, this.numOfPlaces).subscribe({
       next: (response: any) => {
         console.log('Exam created successfully:', response);
       },

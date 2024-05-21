@@ -13,8 +13,14 @@ export class LogoutComponent {
   constructor(private authService: AuthService, private router: Router){}
 
   logout() {
-    this.authService.logout().subscribe();
-    sessionStorage.clear();
+    this.authService.logout().subscribe({
+      next: () => {
+        localStorage.clear();
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
     this.router.navigate(['/login']);  
   }
 }

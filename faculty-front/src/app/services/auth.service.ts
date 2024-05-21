@@ -22,6 +22,4 @@ export class AuthService {
     const logoutUrl = 'https://localhost:5001/logout';
     return this.http.post(logoutUrl, {});
   }
-
-  
 }

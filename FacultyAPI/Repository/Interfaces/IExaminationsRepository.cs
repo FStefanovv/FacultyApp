@@ -1,5 +1,6 @@
 namespace FacultyApp.Repository.Interfaces;
 
+using FacultyApp.Dto;
 using FacultyApp.Model;
 
 public interface IExaminationsRepository {
@@ -9,4 +10,5 @@ public interface IExaminationsRepository {
     List<Examination> GetTeacherExaminations(string teacherId, string filter);
     List<ExaminationApplication> GetStudentExaminations(string studentId, string filter);
     Task CreateApplication(ExaminationApplication examinationApplication);
+    List<Examination> GetCourseExaminations(string courseId, string filter);
 }

@@ -11,17 +11,17 @@ export class ExamsService {
   
   constructor(private http: HttpClient) {}
 
-  getTeacherCourses() : Observable<Course[]> {
-    const teacherCoursesUrl = "https://localhost:5001/my-courses";
-   
-    return this.http.get<Course[]>(teacherCoursesUrl);
-  }
-
-  create(courseId: string, examDate: Date, numOfPlaces: number) : any {
+  createExam(courseId: string, examDate: Date, numOfPlaces: number) : any {
     const createExamUrl = 'https://localhost:5001/exams/' + courseId;
     const newExaminationDto = { scheduledFor: examDate, availablePlaces: numOfPlaces };
 
     return this.http.post(createExamUrl, newExaminationDto, {  });
+  }
+
+  getTeacherCourses() : Observable<Course[]> {
+    const teacherCoursesUrl = "https://localhost:5001/my-courses";
+   
+    return this.http.get<Course[]>(teacherCoursesUrl);
   }
 
   getTeacherExams(filter?: any) : Observable<Examination[]> {
@@ -38,5 +38,11 @@ export class ExamsService {
   cancel(id: string) : any {
     const cancelExamUrl = `https://localhost:5001/exams/${id}`;
     return this.http.delete<void>(cancelExamUrl);
+  }
+
+  getScheduledExamsForCourse(courseId: string) : Observable<Examination[]>{
+    const getExamsFor = `https://localhost:5001/course-exams/${courseId}/scheduled`;
+
+    return this.http.get<Examination[]>(getExamsFor);
   }
 }

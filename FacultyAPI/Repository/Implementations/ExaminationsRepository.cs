@@ -2,6 +2,7 @@ using FacultyApp.Enums;
 using FacultyApp.Model;
 using Microsoft.EntityFrameworkCore;
 using FacultyApp.Repository.Interfaces;
+using FacultyApp.Exceptions;
 
 namespace FacultyApp.Repository.Implementations;
 
@@ -57,6 +58,22 @@ public class ExaminationsRepository : IExaminationsRepository {
     public async Task CreateApplication(ExaminationApplication examinationApplication){
         await _context.ExamApplications.AddAsync(examinationApplication);
         await _context.SaveChangesAsync();
+    }
+
+    public List<Examination> GetCourseExaminations(string courseId, string filter) {
+        bool courseExists = _context.Courses.Any(c => c.Id == courseId);
+        if(!courseExists) throw new NotFoundException();
+
+        if(filter == "all"){
+            return _context.Examinations.Where(e => e.CourseId == courseId).OrderBy(e => e.ScheduledFor).ToList();
+        } else if(filter == "scheduled"){
+            return _context.Examinations.Where(e => e.CourseId == courseId 
+                                                && e.Status == ExaminationStatus.SCHEDULED
+                                                && e.ScheduledFor > DateTime.UtcNow)
+                                        .OrderBy(e => e.ScheduledFor)
+                                        .ToList();
+        }
+        else throw new Exception("Invalid filter parameter");
     }
 }
 

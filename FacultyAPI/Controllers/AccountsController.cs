@@ -37,7 +37,7 @@ public class AccountsController : ControllerBase {
             var (httpOnly, expiration) = AuthCookieUtils.GetOptions();
 
             Response.Cookies.Append("X-Access-Token", token, httpOnly);
-            Response.Cookies.Append("X-Expiration-Cookie", expiration.Expires.ToString()!, expiration);
+            Response.Cookies.Append("X-Expiration-Cookie", "", expiration);
             
             return Ok();
         } catch(NotFoundException) {
